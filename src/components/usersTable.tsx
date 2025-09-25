@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-
-// URL de la Cloud Function
-const API_URL = "https://getusers-f33kzu6gwa-uc.a.run.app";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase";
 
 type User = {
-  id: number;
-  name: string;
+  id: string;
+  email: string;
   role: string;
 };
 
@@ -16,21 +15,25 @@ export default function UsersTable() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch(API_URL);
-        if (!res.ok) {
-          throw new Error("Error en la respuesta del servidor");
-        }
-        const data: User[] = await res.json();
-        setUsers(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
+    const usersCollection = collection(db, "users");
+    const unsubscribe = onSnapshot(usersCollection, 
+      (snapshot) => {
+        const usersData: User[] = [];
+        snapshot.forEach((doc) => {
+          usersData.push({ id: doc.id, ...doc.data() } as User);
+        });
+        setUsers(usersData);
+        setLoading(false);
+      }, 
+      (err) => {
+        console.error("Error al obtener usuarios:", err);
+        setError("No se pudieron cargar los usuarios.");
         setLoading(false);
       }
-    };
-    fetchUsers();
+    );
+
+    // Limpiar el listener cuando el componente se desmonte
+    return () => unsubscribe();
   }, []);
 
   if (loading) return <p className="text-center py-10">Cargando usuarios...</p>;
@@ -43,16 +46,14 @@ export default function UsersTable() {
         <table className="table-auto border-collapse border border-gray-300 w-full text-center">
             <thead className="bg-gray-100">
             <tr>
-                <th className="border px-4 py-2 text-left">ID</th>
-                <th className="border px-4 py-2 text-left">Nombre</th>
+                <th className="border px-4 py-2 text-left">Correo Electrónico</th>
                 <th className="border px-4 py-2 text-left">Rol</th>
             </tr>
             </thead>
             <tbody>
             {users.map((u) => (
                 <tr key={u.id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2">{u.id}</td>
-                <td className="border px-4 py-2">{u.name}</td>
+                <td className="border px-4 py-2">{u.email}</td>
                 <td className="border px-4 py-2 capitalize">{u.role}</td>
                 </tr>
             ))}
