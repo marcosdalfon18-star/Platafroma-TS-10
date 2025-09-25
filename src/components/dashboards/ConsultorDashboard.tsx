@@ -41,7 +41,7 @@ const companies: Company[] = [
     industry: "Tecnología",
     employeesCount: 45,
     plan: "Profesional",
-    logo: "/placeholder-logo-1.png",
+    logo: "https://picsum.photos/seed/logo1/40/40",
     image: "https://picsum.photos/seed/1/600/400",
     employees: [
       { id: 101, name: "Ana García", position: "Desarrolladora Frontend" },
@@ -58,7 +58,7 @@ const companies: Company[] = [
     industry: "Restauración",
     employeesCount: 22,
     plan: "Básico",
-    logo: "/placeholder-logo-2.png",
+    logo: "https://picsum.photos/seed/logo2/40/40",
     image: "https://picsum.photos/seed/2/600/400",
     employees: [
         { id: 201, name: "Lucía Martínez", position: "Chef Principal" },
@@ -73,7 +73,7 @@ const companies: Company[] = [
     industry: "Construcción",
     employeesCount: 89,
     plan: "Premium",
-    logo: "/placeholder-logo-3.png",
+    logo: "https://picsum.photos/seed/logo3/40/40",
     image: "https://picsum.photos/seed/3/600/400",
     employees: [
         { id: 301, name: "Roberto Fernández", position: "Jefe de Obra" },
@@ -103,8 +103,15 @@ const CompanyCard = ({ company, onManageClick }: { company: Company; onManageCli
         </CardHeader>
         <CardContent className="p-4">
             <div className="flex items-center gap-4 mb-4">
-                 <div className="bg-gray-200 p-2 rounded-md">
-                     <Building className="h-6 w-6 text-gray-600" />
+                 <div className="bg-gray-200 p-1 rounded-md relative h-10 w-10">
+                     <Image
+                        src={company.logo}
+                        alt={`Logo de ${company.name}`}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        className="rounded-md"
+                        data-ai-hint="logo"
+                     />
                  </div>
                 <div>
                     <CardTitle className="text-lg">{company.name}</CardTitle>
