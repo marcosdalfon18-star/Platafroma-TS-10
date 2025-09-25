@@ -42,6 +42,7 @@ export default function AppLayout({
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
       setUser(currentUser);
       if (currentUser) {
         const docRef = doc(db, "users", currentUser.uid);
@@ -51,6 +52,10 @@ export default function AppLayout({
         }
         if (pathname === "/") {
             router.push("/dashboard");
+        }
+      } else {
+        if (pathname !== "/") {
+            router.push("/");
         }
       }
       setLoading(false);
@@ -80,9 +85,9 @@ export default function AppLayout({
       </head>
       <body className="font-body antialiased">
         <RoleContext.Provider value={{ userRole, setUserRole, user }}>
-            {isAuthPage || !user ? (
+            {isAuthPage ? (
                 children
-            ) : (
+            ) : user ? (
                 <SidebarProvider>
                     <AppSidebar userRole={userRole} />
                     <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
@@ -92,7 +97,7 @@ export default function AppLayout({
                         </main>
                     </div>
                 </SidebarProvider>
-            )}
+            ) : null}
         </RoleContext.Provider>
         <Toaster />
       </body>
