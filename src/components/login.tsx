@@ -3,6 +3,11 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase";
 import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Loader2 } from 'lucide-react';
 
 
 export default function Login() {
@@ -17,7 +22,6 @@ export default function Login() {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // El onAuthStateChanged en la página principal se encargará de redirigir
     } catch (err: any) {
       setError("Correo o contraseña incorrectos.");
     } finally {
@@ -26,34 +30,46 @@ export default function Login() {
   };
 
   return (
-    <div className="bg-white p-6 rounded shadow-md w-full">
-      <h2 className="text-2xl font-bold mb-4 text-center">Iniciar Sesión</h2>
-      <form onSubmit={handleLogin} className="space-y-4">
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <button 
-            type="submit" 
-            disabled={loading}
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-        >
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
-      {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
-    </div>
+    <Card>
+        <CardHeader>
+            <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
+            <CardDescription>Introduce tus credenciales para acceder a la plataforma.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="email">Correo</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        placeholder="tu@correo.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="password">Contraseña</Label>
+                    <Input
+                        id="password"
+                        type="password"
+                        placeholder="********"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                 </div>
+                <Button 
+                    type="submit" 
+                    disabled={loading}
+                    className="w-full"
+                >
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {loading ? "Entrando..." : "Entrar"}
+                </Button>
+            </form>
+            {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
+        </CardContent>
+    </Card>
   );
 }
