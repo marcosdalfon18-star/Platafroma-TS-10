@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Code Corrector',
+  title: 'TS Plataforma Digital',
   description: 'AI-powered code analysis and correction.',
 };
 
