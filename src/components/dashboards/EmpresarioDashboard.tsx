@@ -4,7 +4,9 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { Users, Briefcase, Plane, Building2 } from "lucide-react";
+import { Users, Briefcase, Plane, Building2, UserSearch, PlayCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 
 // Datos de ejemplo para el capital humano
@@ -24,6 +26,15 @@ const chartData = [
 
 const COLORS = ["#16A34A", "#DC2626", "#F97316"]; // Verde, Rojo, Naranja
 
+// Datos de ejemplo para los puestos
+const jobPositions = [
+    { id: 1, title: "Gerente de Ventas", status: "Inactivo" },
+    { id: 2, title: "Desarrollador Frontend", status: "Activo" },
+    { id: 3, title: "Analista de Marketing", status: "Inactivo" },
+    { id: 4, title: "Soporte Técnico", status: "Inactivo" },
+];
+
+
 export default function EmpresarioDashboard() {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 min-h-screen">
@@ -31,7 +42,7 @@ export default function EmpresarioDashboard() {
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard del Empresario 💼</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Resumen de la situación actual de tu capital humano.
+            Resumen de la situación actual de tu capital humano y actividades.
           </p>
         </header>
 
@@ -116,8 +127,9 @@ export default function EmpresarioDashboard() {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="capital-humano">
-                    <TabsList>
+                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
                         <TabsTrigger value="capital-humano">Capital Humano</TabsTrigger>
+                        <TabsTrigger value="procesos-seleccion">Procesos de Selección</TabsTrigger>
                         <TabsTrigger value="finanzas" disabled>Finanzas</TabsTrigger>
                         <TabsTrigger value="operaciones" disabled>Operaciones</TabsTrigger>
                     </TabsList>
@@ -148,6 +160,39 @@ export default function EmpresarioDashboard() {
                                 </CardContent>
                             </Card>
                         </div>
+                    </TabsContent>
+                     <TabsContent value="procesos-seleccion" className="mt-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Gestión de Búsquedas</CardTitle>
+                                <CardDescription>Activa y gestiona los procesos de selección para los puestos de tu empresa.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Puesto</TableHead>
+                                            <TableHead>Estado de la Búsqueda</TableHead>
+                                            <TableHead className="text-right">Acciones</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {jobPositions.map((puesto) => (
+                                            <TableRow key={puesto.id}>
+                                                <TableCell className="font-medium">{puesto.title}</TableCell>
+                                                <TableCell>{puesto.status}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <Button variant="outline" size="sm">
+                                                        <PlayCircle className="mr-2 h-4 w-4" />
+                                                        Activar Búsqueda
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
                     </TabsContent>
                 </Tabs>
             </CardContent>
