@@ -7,7 +7,6 @@ import EmpresarioDashboard from "@/components/dashboards/EmpresarioDashboard";
 import EmpleadoDashboard from "@/components/dashboards/EmpleadoDashboard";
 import GestorDashboard from "@/components/dashboards/GestorDashboard";
 import { useCurrentRole } from "../layout";
-import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
   const { userRole, user } = useCurrentRole();

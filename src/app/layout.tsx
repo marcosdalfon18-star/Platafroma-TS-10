@@ -9,7 +9,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -36,7 +36,9 @@ export default function AppLayout({
 }) {
   const [userRole, setUserRole] = useState<Role>("consultor");
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -47,12 +49,26 @@ export default function AppLayout({
         if (docSnap.exists()) {
           setUserRole(docSnap.data().role as Role);
         }
+        if (pathname === "/") {
+            router.push("/dashboard");
+        }
       }
+      setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [pathname, router]);
 
   const isAuthPage = pathname === "/";
+  
+  if (loading) {
+      return (
+          <html lang="en">
+              <body>
+                <div className="flex items-center justify-center min-h-screen">Cargando...</div>
+              </body>
+          </html>
+      )
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -64,7 +80,7 @@ export default function AppLayout({
       </head>
       <body className="font-body antialiased">
         <RoleContext.Provider value={{ userRole, setUserRole, user }}>
-            {isAuthPage ? (
+            {isAuthPage || !user ? (
                 children
             ) : (
                 <SidebarProvider>
