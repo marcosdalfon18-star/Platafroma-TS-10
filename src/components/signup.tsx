@@ -7,30 +7,36 @@ import { auth, db } from "@/firebase";
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("talento"); // rol por defecto
+  const [role, setRole] = useState("consultor");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+    setSuccess(null);
 
     try {
-      // Crear usuario en Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Guardar datos en Firestore
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         role: role,
       });
 
-      alert(`✅ Usuario registrado con rol: ${role}`);
+      setSuccess(`✅ ¡Usuario registrado con rol: ${role}! Ya puedes iniciar sesión.`);
       setEmail("");
       setPassword("");
-      setRole("talento");
+      setRole("consultor");
     } catch (error: any) {
-      alert("❌ Error al registrar: " + error.message);
+      if (error.code === 'auth/email-already-in-use') {
+        setError("❌ El correo electrónico ya está en uso.");
+      } else {
+        setError("❌ Error al registrar: " + error.message);
+      }
       console.error(error);
     } finally {
       setLoading(false);
@@ -38,50 +44,47 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSignup}
-        className="bg-white p-6 rounded shadow-md w-96"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Registro</h2>
-
+    <div className="bg-white p-6 rounded shadow-md w-full">
+      <form onSubmit={handleSignup} className="space-y-4">
         <input
           type="email"
           placeholder="Correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full p-2 border rounded"
           required
         />
 
         <input
           type="password"
-          placeholder="Contraseña"
+          placeholder="Contraseña (mínimo 6 caracteres)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full p-2 border rounded"
           required
         />
 
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full p-2 border rounded"
         >
           <option value="consultor">Consultor</option>
-          <option value="empresa">Empresa</option>
-          <option value="talento">Talento</option>
+          <option value="empresario">Empresario</option>
+          <option value="empleado">Empleado</option>
           <option value="gestor">Gestor</option>
         </select>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
+          className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 disabled:opacity-50"
         >
           {loading ? "Registrando..." : "Registrarse"}
         </button>
       </form>
+       {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
+       {success && <p className="text-green-500 text-sm mt-4 text-center">{success}</p>}
     </div>
   );
 }
