@@ -10,6 +10,7 @@ import {
   SuggestAutomatedFixesInput,
   SuggestAutomatedFixesOutput,
 } from '@/ai/flows/suggest-automated-fixes';
+import { employeeAssistantFlow } from '@/ai/flows/employee-assistant';
 
 export async function getAiExplanation(
   input: ExplainCodeErrorsInput
@@ -33,4 +34,14 @@ export async function getAiFix(
     console.error('Error in getAiFix:', error);
     throw new Error('Failed to get AI fix suggestion.');
   }
+}
+
+export async function getEmployeeAssistantResponse(prompt: string): Promise<string> {
+    try {
+        const result = await employeeAssistantFlow(prompt);
+        return result;
+    } catch (error) {
+        console.error('Error in employeeAssistantFlow:', error);
+        throw new Error('Failed to get response from AI assistant.');
+    }
 }
