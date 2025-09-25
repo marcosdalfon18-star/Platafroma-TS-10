@@ -11,16 +11,11 @@ import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
   const { userRole, user } = useCurrentRole();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!user) {
-      router.push('/');
-    }
-  }, [user, router]);
 
   if (!user) {
-    return <div className="flex items-center justify-center h-full"><p>Redirigiendo a la página de inicio...</p></div>;
+    // Se muestra un estado de carga o nulo mientras se resuelve la autenticación en el layout.
+    // Esto evita un parpadeo o redirección innecesaria.
+    return <div className="flex items-center justify-center h-full"><p>Cargando...</p></div>;
   }
 
   const renderDashboard = () => {
