@@ -5,7 +5,7 @@ import ConsultorDashboard from "@/components/dashboards/ConsultorDashboard";
 import EmpresarioDashboard from "@/components/dashboards/EmpresarioDashboard";
 import EmpleadoDashboard from "@/components/dashboards/EmpleadoDashboard";
 import GestorDashboard from "@/components/dashboards/GestorDashboard";
-import { Button } from "@/components/ui/button";
+import Header from "@/components/Header"; // Importar el nuevo Header
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor" | null;
 
@@ -29,18 +29,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="p-4 bg-gray-100 dark:bg-gray-800 shadow-md">
-        <div className="container mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold">TS Plataforma Digital (Modo Desarrollo)</h1>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">Ver como:</span>
-            <Button variant={userRole === 'consultor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("consultor")}>Consultor</Button>
-            <Button variant={userRole === 'empresario' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empresario")}>Empresario</Button>
-            <Button variant={userRole === 'empleado' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empleado")}>Empleado</Button>
-            <Button variant={userRole === 'gestor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("gestor")}>Gestor</Button>
-          </div>
-        </div>
-      </div>
+      <Header userRole={userRole} setUserRole={setUserRole} />
       <main>
         {renderDashboard()}
       </main>
