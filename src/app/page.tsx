@@ -1,44 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import type { User } from "firebase/auth";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/firebase";
-import Login from "@/components/login";
-import Signup from "@/components/signup";
+import React, { useState } from "react";
 import ConsultorDashboard from "@/components/dashboards/ConsultorDashboard";
 import EmpresarioDashboard from "@/components/dashboards/EmpresarioDashboard";
 import EmpleadoDashboard from "@/components/dashboards/EmpleadoDashboard";
 import GestorDashboard from "@/components/dashboards/GestorDashboard";
+import { Button } from "@/components/ui/button";
+
+type Role = "consultor" | "empresario" | "empleado" | "gestor" | null;
 
 export default function HomePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        try {
-          const docRef = doc(db, "users", currentUser.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUserRole(docSnap.data().role);
-          } else {
-            console.log("No such document!");
-          }
-        } catch (error) {
-            console.error("Error fetching user role: ", error);
-        }
-      } else {
-        setUserRole(null);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  const [userRole, setUserRole] = useState<Role>("consultor");
 
   const renderDashboard = () => {
     switch (userRole) {
@@ -51,43 +23,27 @@ export default function HomePage() {
       case "gestor":
         return <GestorDashboard />;
       default:
-        return <div className="flex items-center justify-center h-screen"><p>Cargando dashboard...</p></div>;
+        return <div className="flex items-center justify-center h-screen"><p>Selecciona un rol para ver el dashboard.</p></div>;
     }
   };
 
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>Cargando...</p>
-      </div>
-    );
-  }
-
   return (
     <div>
-      {user && userRole ? (
-        renderDashboard()
-      ) : (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md">
-                <Login />
-                <div className="my-8">
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t"></span>
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-gray-100 px-2 text-muted-foreground">
-                                O regístrate
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <Signup />
-            </div>
+      <div className="p-4 bg-gray-100 dark:bg-gray-800 shadow-md">
+        <div className="container mx-auto flex items-center justify-between">
+          <h1 className="text-xl font-bold">TS Plataforma Digital (Modo Desarrollo)</h1>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium">Ver como:</span>
+            <Button variant={userRole === 'consultor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("consultor")}>Consultor</Button>
+            <Button variant={userRole === 'empresario' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empresario")}>Empresario</Button>
+            <Button variant={userRole === 'empleado' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empleado")}>Empleado</Button>
+            <Button variant={userRole === 'gestor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("gestor")}>Gestor</Button>
+          </div>
         </div>
-      )}
+      </div>
+      <main>
+        {renderDashboard()}
+      </main>
     </div>
   );
 }
