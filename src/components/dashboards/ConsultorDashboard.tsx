@@ -95,8 +95,8 @@ const CompanyCard = ({ company, onManageClick }: { company: Company; onManageCli
                 <Image
                     src={company.image}
                     alt={`Imagen corporativa de ${company.name}`}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: 'cover' }}
                     data-ai-hint="office building"
                 />
             </div>
@@ -288,14 +288,12 @@ export default function ConsultorDashboard() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="bg-background">
         {selectedCompany ? (
             <CompanyDetailView company={selectedCompany} onBackClick={handleBackClick} onUpload={handleUpload} />
         ) : (
             <CompanyListView onManageClick={handleManageClick} />
         )}
-      </div>
     </div>
   );
 }

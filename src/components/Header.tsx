@@ -5,8 +5,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Bell, Circle } from "lucide-react";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
-type Role = "consultor" | "empresario" | "empleado" | "gestor" | null;
+type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
 interface HeaderProps {
   userRole: Role;
@@ -29,12 +30,16 @@ const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
     }
 
   return (
-    <header className="p-4 bg-gray-100 dark:bg-gray-800 shadow-md">
+    <header className="p-4 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
       <div className="container mx-auto flex items-center justify-between">
-        <h1 className="text-xl font-bold">TS Plataforma Digital (Modo Desarrollo)</h1>
+        <div className="flex items-center gap-2">
+            <SidebarTrigger className="md:hidden" />
+            <h1 className="text-xl font-bold hidden sm:block">TS Plataforma Digital (Dev)</h1>
+        </div>
+        
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">Ver como:</span>
+            <span className="text-sm font-medium hidden md:inline">Ver como:</span>
             <Button variant={userRole === 'consultor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("consultor")}>Consultor</Button>
             <Button variant={userRole === 'empresario' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empresario")}>Empresario</Button>
             <Button variant={userRole === 'empleado' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empleado")}>Empleado</Button>
