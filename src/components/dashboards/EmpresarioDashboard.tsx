@@ -1,8 +1,11 @@
+
 "use client";
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { Badge } from "@/components/ui/badge";
+import { Users, Briefcase, Plane, Building2 } from "lucide-react";
+
 
 // Datos de ejemplo para el capital humano
 const humanCapitalData = {
@@ -36,7 +39,7 @@ export default function EmpresarioDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total de Empleados</CardTitle>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-muted-foreground"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+              <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalEmpleados}</div>
@@ -45,7 +48,7 @@ export default function EmpresarioDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Activos</CardTitle>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-green-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+              <Briefcase className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{humanCapitalData.activos}</div>
@@ -54,7 +57,7 @@ export default function EmpresarioDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">De Baja</CardTitle>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-red-500"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+              <Users className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{humanCapitalData.baja}</div>
@@ -63,7 +66,7 @@ export default function EmpresarioDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Vacaciones</CardTitle>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-orange-500"><path d="M22 10.5h-1V7a5 5 0 0 0-10 0v3.5H2.5a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h19a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5Z" /><path d="M17 7.5a2.5 2.5 0 0 0-5 0" /></svg>
+              <Plane className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{humanCapitalData.vacaciones}</div>
@@ -71,7 +74,7 @@ export default function EmpresarioDashboard() {
           </Card>
         </section>
 
-        <Card className="col-span-1 lg:col-span-2">
+        <Card className="col-span-1 lg:col-span-2 mb-8">
           <CardHeader>
             <CardTitle>Distribución de Empleados</CardTitle>
           </CardHeader>
@@ -104,6 +107,50 @@ export default function EmpresarioDashboard() {
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <CardTitle>Panel de Actividades</CardTitle>
+                <CardDescription>Gestiona las áreas clave de tu empresa.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Tabs defaultValue="capital-humano">
+                    <TabsList>
+                        <TabsTrigger value="capital-humano">Capital Humano</TabsTrigger>
+                        <TabsTrigger value="finanzas" disabled>Finanzas</TabsTrigger>
+                        <TabsTrigger value="operaciones" disabled>Operaciones</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="capital-humano" className="mt-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Card>
+                                <CardHeader className="flex flex-row items-center gap-4">
+                                    <Building2 className="h-8 w-8 text-primary" />
+                                    <div>
+                                        <CardTitle>Organigrama</CardTitle>
+                                        <CardDescription>Estructura jerárquica de la empresa.</CardDescription>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-sm text-muted-foreground">Próximamente: Visualiza y gestiona el organigrama de tu equipo.</p>
+                                </CardContent>
+                            </Card>
+                            <Card>
+                                <CardHeader className="flex flex-row items-center gap-4">
+                                    <Briefcase className="h-8 w-8 text-primary" />
+                                    <div>
+                                        <CardTitle>Análisis de Puestos</CardTitle>
+                                        <CardDescription>Roles y responsabilidades de cada puesto.</CardDescription>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-sm text-muted-foreground">Próximamente: Define y analiza los perfiles de puesto.</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+                </Tabs>
+            </CardContent>
         </Card>
 
       </div>
