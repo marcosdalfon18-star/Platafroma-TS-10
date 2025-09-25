@@ -1,7 +1,8 @@
+
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Sidebar,
@@ -11,11 +12,12 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NAV_LINKS, type NavLink } from "@/lib/nav-links";
 import { Button } from "@/components/ui/button";
 import { LogOut, Settings } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -25,6 +27,12 @@ interface AppSidebarProps {
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/");
+  };
 
   const hasAccess = (link: NavLink) => {
     return link.roles.includes(userRole);
@@ -60,10 +68,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
       <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton icon={Settings}>Ajustes</SidebarMenuButton>
+                <SidebarMenuButton icon={Settings} tooltip={{ children: "Ajustes", side: "right" }}>Ajustes</SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <SidebarMenuButton icon={LogOut}>Cerrar Sesión</SidebarMenuButton>
+                <SidebarMenuButton icon={LogOut} onClick={handleLogout} tooltip={{ children: "Cerrar Sesión", side: "right" }}>Cerrar Sesión</SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

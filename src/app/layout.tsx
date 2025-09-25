@@ -1,17 +1,22 @@
+
 "use client";
 
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/firebase";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
+import { usePathname } from "next/navigation";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
-// Creamos un contexto para compartir el rol y su setter
 interface RoleContextType {
     userRole: Role;
     setUserRole: React.Dispatch<React.SetStateAction<Role>>;
+    user: User | null;
 }
 
 const RoleContext = createContext<RoleContextType | null>(null);
@@ -30,6 +35,24 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const [userRole, setUserRole] = useState<Role>("consultor");
+  const [user, setUser] = useState<User | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserRole(docSnap.data().role as Role);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const isAuthPage = pathname === "/";
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -40,16 +63,20 @@ export default function AppLayout({
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <RoleContext.Provider value={{ userRole, setUserRole }}>
-            <SidebarProvider>
-                <AppSidebar userRole={userRole} />
-                <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-                    <Header userRole={userRole} setUserRole={setUserRole} />
-                    <main className="p-4 sm:p-6 lg:p-8">
-                        {children}
-                    </main>
-                </div>
-            </SidebarProvider>
+        <RoleContext.Provider value={{ userRole, setUserRole, user }}>
+            {isAuthPage ? (
+                children
+            ) : (
+                <SidebarProvider>
+                    <AppSidebar userRole={userRole} />
+                    <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+                        <Header userRole={userRole} setUserRole={setUserRole} />
+                        <main className="p-4 sm:p-6 lg:p-8">
+                            {children}
+                        </main>
+                    </div>
+                </SidebarProvider>
+            )}
         </RoleContext.Provider>
         <Toaster />
       </body>

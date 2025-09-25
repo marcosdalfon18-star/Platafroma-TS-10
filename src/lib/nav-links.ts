@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   Users,
@@ -23,7 +24,7 @@ export type NavLink = {
 
 export const NAV_LINKS: NavLink[] = [
   {
-    href: "/",
+    href: "/dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
     roles: ["consultor", "empresario", "empleado", "gestor"],

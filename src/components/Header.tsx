@@ -1,11 +1,16 @@
+
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Bell, Circle } from "lucide-react";
+import { Bell, Circle, LogOut } from "lucide-react";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { auth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useCurrentRole } from "@/app/layout";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -15,11 +20,18 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
+    const router = useRouter();
+    const { user } = useCurrentRole();
     const {
         permissionStatus,
         requestPermission,
         sendTestNotification
     } = usePushNotifications();
+
+    const handleLogout = async () => {
+        await signOut(auth);
+        router.push("/");
+    };
 
     const getStatusColor = () => {
         switch (permissionStatus) {
@@ -38,13 +50,15 @@ const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium hidden md:inline">Ver como:</span>
-            <Button variant={userRole === 'consultor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("consultor")}>Consultor</Button>
-            <Button variant={userRole === 'empresario' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empresario")}>Empresario</Button>
-            <Button variant={userRole === 'empleado' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empleado")}>Empleado</Button>
-            <Button variant={userRole === 'gestor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("gestor")}>Gestor</Button>
-          </div>
+          {user?.email === 'consultor@test.com' && (
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium hidden md:inline">Ver como:</span>
+              <Button variant={userRole === 'consultor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("consultor")}>Consultor</Button>
+              <Button variant={userRole === 'empresario' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empresario")}>Empresario</Button>
+              <Button variant={userRole === 'empleado' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("empleado")}>Empleado</Button>
+              <Button variant={userRole === 'gestor' ? 'default' : 'outline'} size="sm" onClick={() => setUserRole("gestor")}>Gestor</Button>
+            </div>
+          )}
           <Popover>
             <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
@@ -80,6 +94,9 @@ const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
                 </div>
             </PopoverContent>
           </Popover>
+           <Button variant="ghost" size="icon" onClick={handleLogout}>
+                <LogOut className="h-5 w-5" />
+           </Button>
         </div>
       </div>
     </header>
