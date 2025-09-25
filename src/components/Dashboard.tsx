@@ -1,4 +1,3 @@
-// src/components/Dashboard.tsx
 "use client";
 import React from "react";
 import { signOut } from "firebase/auth";
