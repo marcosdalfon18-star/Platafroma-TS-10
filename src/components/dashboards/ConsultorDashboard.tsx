@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, Building, ArrowLeft, Briefcase, FileText, BookOpen, Users, Upload } from "lucide-react";
+import { Search, PlusCircle, ArrowLeft, Briefcase, FileText, BookOpen, Users, Upload, Building } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import UploadDocumentModal from "@/components/modals/UploadDocumentModal"; // Nueva importación
+import UploadDocumentModal from "@/components/modals/UploadDocumentModal";
 
 // --- Tipos de datos ampliados ---
 type Employee = {
@@ -27,8 +27,6 @@ type Company = {
   industry: string;
   employeesCount: number;
   plan: "Básico" | "Profesional" | "Premium";
-  logo: string;
-  image: string;
   employees: Employee[];
   documents: Document[];
 };
@@ -41,8 +39,6 @@ const companies: Company[] = [
     industry: "Tecnología",
     employeesCount: 45,
     plan: "Profesional",
-    logo: "https://picsum.photos/seed/logo1/40/40",
-    image: "https://picsum.photos/seed/1/600/400",
     employees: [
       { id: 101, name: "Ana García", position: "Desarrolladora Frontend" },
       { id: 102, name: "Carlos Pérez", position: "Líder de Proyecto" },
@@ -58,8 +54,6 @@ const companies: Company[] = [
     industry: "Restauración",
     employeesCount: 22,
     plan: "Básico",
-    logo: "https://picsum.photos/seed/logo2/40/40",
-    image: "https://picsum.photos/seed/2/600/400",
     employees: [
         { id: 201, name: "Lucía Martínez", position: "Chef Principal" },
     ],
@@ -73,8 +67,6 @@ const companies: Company[] = [
     industry: "Construcción",
     employeesCount: 89,
     plan: "Premium",
-    logo: "https://picsum.photos/seed/logo3/40/40",
-    image: "https://picsum.photos/seed/3/600/400",
     employees: [
         { id: 301, name: "Roberto Fernández", position: "Jefe de Obra" },
         { id: 302, name: "Sofía López", position: "Arquitecta" },
@@ -89,35 +81,19 @@ const companies: Company[] = [
 // --- Componentes ---
 
 const CompanyCard = ({ company, onManageClick }: { company: Company; onManageClick: (company: Company) => void }) => (
-    <Card className="overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl">
-        <CardHeader className="p-0">
-            <div className="relative h-40 w-full">
-                <Image
-                    src={company.image}
-                    alt={`Imagen corporativa de ${company.name}`}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    data-ai-hint="office building"
-                />
-            </div>
-        </CardHeader>
-        <CardContent className="p-4">
-            <div className="flex items-center gap-4 mb-4">
-                 <div className="bg-gray-200 p-1 rounded-md relative h-10 w-10">
-                     <Image
-                        src={company.logo}
-                        alt={`Logo de ${company.name}`}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        className="rounded-md"
-                        data-ai-hint="logo"
-                     />
+    <Card className="overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl flex flex-col">
+        <CardHeader>
+            <div className="flex items-center gap-4">
+                 <div className="bg-muted p-3 rounded-lg">
+                     <Building className="h-6 w-6 text-muted-foreground" />
                  </div>
                 <div>
                     <CardTitle className="text-lg">{company.name}</CardTitle>
                     <CardDescription>{company.industry}</CardDescription>
                 </div>
             </div>
+        </CardHeader>
+        <CardContent className="flex-grow">
             <div className="text-sm text-muted-foreground space-y-1">
                 <p><strong>Empleados:</strong> {company.employeesCount}</p>
                 <p><strong>Plan Contratado:</strong> <span className="font-semibold text-primary">{company.plan}</span></p>
