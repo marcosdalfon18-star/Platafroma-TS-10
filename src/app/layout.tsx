@@ -42,7 +42,6 @@ export default function AppLayout({
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(true);
       setUser(currentUser);
       if (currentUser) {
         const docRef = doc(db, "users", currentUser.uid);
@@ -50,18 +49,22 @@ export default function AppLayout({
         if (docSnap.exists()) {
           setUserRole(docSnap.data().role as Role);
         }
-        if (pathname === "/") {
-            router.push("/dashboard");
-        }
-      } else {
-        if (pathname !== "/") {
-            router.push("/");
-        }
       }
       setLoading(false);
     });
     return () => unsubscribe();
-  }, [pathname, router]);
+  }, []);
+
+  useEffect(() => {
+      if (!loading) {
+          if (user && pathname === "/") {
+              router.push("/dashboard");
+          } else if (!user && pathname !== "/") {
+              router.push("/");
+          }
+      }
+  }, [user, loading, pathname, router]);
+
 
   const isAuthPage = pathname === "/";
   
@@ -74,6 +77,21 @@ export default function AppLayout({
           </html>
       )
   }
+  
+  const content = user ? (
+      <SidebarProvider>
+          <AppSidebar userRole={userRole} />
+          <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+              <Header userRole={userRole} setUserRole={setUserRole} />
+              <main className="p-4 sm:p-6 lg:p-8">
+                  {children}
+              </main>
+          </div>
+      </SidebarProvider>
+  ) : isAuthPage ? (
+      children
+  ) : null;
+
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -85,19 +103,7 @@ export default function AppLayout({
       </head>
       <body className="font-body antialiased">
         <RoleContext.Provider value={{ userRole, setUserRole, user }}>
-            {isAuthPage ? (
-                children
-            ) : user ? (
-                <SidebarProvider>
-                    <AppSidebar userRole={userRole} />
-                    <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-                        <Header userRole={userRole} setUserRole={setUserRole} />
-                        <main className="p-4 sm:p-6 lg:p-8">
-                            {children}
-                        </main>
-                    </div>
-                </SidebarProvider>
-            ) : null}
+            {content}
         </RoleContext.Provider>
         <Toaster />
       </body>
