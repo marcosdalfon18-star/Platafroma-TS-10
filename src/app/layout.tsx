@@ -56,14 +56,14 @@ export default function AppLayout({
   }, []);
 
   useEffect(() => {
-      if (!loading) {
-          if (user && pathname === "/") {
-              router.push("/dashboard");
-          } else if (!user && pathname !== "/") {
-              router.push("/");
-          }
+      if (loading) return;
+
+      if (user && pathname === "/") {
+          router.push("/dashboard");
+      } else if (!user && pathname !== "/") {
+          router.push("/");
       }
-  }, [user, loading, pathname, router]);
+  }, [user, loading, router]);
 
 
   const isAuthPage = pathname === "/";
@@ -78,6 +78,10 @@ export default function AppLayout({
       )
   }
   
+  if (!user && !isAuthPage) {
+      return null; // No renderizar nada mientras redirige al login
+  }
+
   const content = user ? (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
@@ -88,10 +92,9 @@ export default function AppLayout({
               </main>
           </div>
       </SidebarProvider>
-  ) : isAuthPage ? (
+  ) : (
       children
-  ) : null;
-
+  );
 
   return (
     <html lang="en" suppressHydrationWarning>
