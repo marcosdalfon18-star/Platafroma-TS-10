@@ -61,7 +61,7 @@ export default function AppLayout({
   if (loading) {
       return (
           <html lang="en">
-              <body>
+              <body className="h-full">
                 <div className="flex items-center justify-center min-h-screen">Cargando...</div>
               </body>
           </html>
@@ -72,7 +72,7 @@ export default function AppLayout({
       return null;
   }
 
-  const content = user ? (
+  const content = user && !isAuthPage ? (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
           <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
@@ -87,14 +87,14 @@ export default function AppLayout({
   );
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
+      <body className={`h-full font-body antialiased ${isAuthPage ? 'bg-gray-50' : ''}`}>
         <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
             {content}
         </RoleContext.Provider>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FC } from 'react';
+import { useState } from 'react';
 import HeroSection from '@/components/HeroSection';
 import LoginModal from '@/components/LoginModal';
 import { useCurrentRole } from './layout';
