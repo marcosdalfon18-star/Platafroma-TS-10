@@ -29,18 +29,41 @@ export const useCurrentRole = () => {
     return context;
 };
 
+// --- Start of Development Mock ---
+// A more realistic mock of the Firebase User object is created to ensure all components
+// have the properties they expect (e.g., displayName, photoURL).
+const mockUser: User = {
+  uid: "dev-uid-123",
+  email: "consultor@test.com", // Set to the special email to enable role switching
+  displayName: "Consultor de Desarrollo",
+  photoURL: null,
+  emailVerified: true,
+  isAnonymous: false,
+  tenantId: null,
+  providerData: [],
+  metadata: {},
+  providerId: "password",
+  toJSON: () => ({}),
+} as User;
+// --- End of Development Mock ---
+
 export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [userRole, setUserRole] = useState<Role>("consultor");
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  // We initialize the user state with our more detailed mock user.
+  const [user, setUser] = useState<User | null>(mockUser);
+  // Loading is set to false as we are not fetching a real user.
+  const [loading, setLoading] = useState(false);
+  
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
+    // The original Firebase auth listener is commented out to prevent it from overwriting the mock user.
+    /*
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
@@ -53,17 +76,19 @@ export default function AppLayout({
       setLoading(false);
     });
     return () => unsubscribe();
+    */
   }, []);
 
   useEffect(() => {
       if (loading) return;
 
+      // This logic now finds a mock user and redirects to the dashboard.
       if (user && pathname === "/") {
           router.push("/dashboard");
       } else if (!user && pathname !== "/") {
           router.push("/");
       }
-  }, [user, loading, router]);
+  }, [user, loading, router, pathname]);
 
 
   const isAuthPage = pathname === "/";
@@ -79,7 +104,7 @@ export default function AppLayout({
   }
   
   if (!user && !isAuthPage) {
-      return null; // No renderizar nada mientras redirige al login
+      return null;
   }
 
   const content = user ? (
