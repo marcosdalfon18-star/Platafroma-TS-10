@@ -18,35 +18,6 @@ interface RoleContextType {
     setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-const mockUser: User = {
-    uid: "mock-user-uid",
-    email: "consultor@test.com",
-    displayName: "Mock User",
-    photoURL: null,
-    phoneNumber: null,
-    providerId: "password",
-    emailVerified: true,
-    isAnonymous: false,
-    metadata: {},
-    providerData: [],
-    refreshToken: "",
-    tenantId: null,
-    delete: async () => {},
-    getIdToken: async () => "",
-    getIdTokenResult: async () => ({
-        token: "",
-        authTime: "",
-        issuedAtTime: "",
-        signInProvider: null,
-        signInSecondFactor: null,
-        expirationTime: "",
-        claims: {},
-    }),
-    reload: async () => {},
-    toJSON: () => ({}),
-};
-
-
 const RoleContext = createContext<RoleContextType | null>(null);
 
 export const useCurrentRole = () => {
@@ -68,11 +39,17 @@ export default function AppLayout({
   const pathname = usePathname();
 
   useEffect(() => {
+    // Si no hay usuario y no estamos en la página de inicio, redirige a la página de inicio
+    if (!user && pathname !== '/') {
+        router.push('/');
+    }
+    // Si hay usuario y estamos en la página de inicio, redirige al dashboard
     if (user && pathname === '/') {
         router.push('/dashboard');
     }
   }, [user, pathname, router]);
   
+  // Renderiza el contenido principal solo si hay un usuario y no estamos en la landing page
   const isAppPage = pathname !== '/';
 
   const content = isAppPage && user ? (
@@ -86,6 +63,7 @@ export default function AppLayout({
           </div>
       </SidebarProvider>
   ) : (
+      // Muestra la landing page (children) si no hay usuario o si la ruta es '/'
       children
   );
 
