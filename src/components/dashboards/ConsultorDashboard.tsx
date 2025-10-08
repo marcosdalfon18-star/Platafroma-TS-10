@@ -84,11 +84,11 @@ const companies: Company[] = [
 // --- Componentes ---
 
 const CompanyCard = ({ company, onManageClick }: { company: Company; onManageClick: (company: Company) => void }) => (
-    <Card className="overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl flex flex-col">
+    <Card className="overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl flex flex-col">
         <CardHeader>
             <div className="flex items-start gap-4">
-                 <div className="bg-muted p-3 rounded-lg">
-                     <Building className="h-6 w-6 text-muted-foreground" />
+                 <div className="bg-primary/10 p-3 rounded-lg">
+                     <Building className="h-6 w-6 text-primary" />
                  </div>
                 <div className="flex-1">
                     <CardTitle className="text-lg font-semibold">{company.name}</CardTitle>
@@ -96,18 +96,18 @@ const CompanyCard = ({ company, onManageClick }: { company: Company; onManageCli
                 </div>
             </div>
         </CardHeader>
-        <CardContent className="flex-grow space-y-2">
+        <CardContent className="flex-grow space-y-4">
             <div className="text-sm flex justify-between items-center">
                 <span className="text-muted-foreground">Empleados</span>
-                <span className="font-bold">{company.employeesCount}</span>
+                <span className="font-bold text-lg">{company.employeesCount}</span>
             </div>
              <div className="text-sm flex justify-between items-center">
-                <span className="text-muted-foreground">Plan</span>
-                <span className="font-bold text-primary">{company.plan}</span>
+                <span className="text-muted-foreground">Plan Contratado</span>
+                <span className="font-semibold text-primary">{company.plan}</span>
             </div>
         </CardContent>
-        <CardFooter>
-            <Button className="w-full" variant="outline" onClick={() => onManageClick(company)}>Gestionar</Button>
+        <CardFooter className="p-4 bg-muted/50">
+            <Button className="w-full" onClick={() => onManageClick(company)}>Gestionar Cliente</Button>
         </CardFooter>
     </Card>
 );
@@ -115,8 +115,8 @@ const CompanyCard = ({ company, onManageClick }: { company: Company; onManageCli
 const CompanyListView = ({ onManageClick }: { onManageClick: (company: Company) => void }) => (
   <>
     <header className="mb-8">
-      <h1 className="text-3xl font-bold">Centro de Mando del Consultor 🧐</h1>
-      <p className="text-muted-foreground mt-1">
+      <h1 className="text-4xl font-bold tracking-tight">Centro de Clientes</h1>
+      <p className="text-muted-foreground mt-2">
         Gestiona todas tus empresas cliente desde un único lugar.
       </p>
     </header>
@@ -124,11 +124,11 @@ const CompanyListView = ({ onManageClick }: { onManageClick: (company: Company) 
     <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-grow">
              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-             <Input placeholder="Buscar empresa por nombre..." className="pl-10" />
+             <Input placeholder="Buscar empresa por nombre o sector..." className="pl-10" />
         </div>
-        <Button>
+        <Button size="lg">
             <PlusCircle className="mr-2 h-5 w-5" />
-            Añadir Nueva Empresa
+            Nueva Empresa
         </Button>
     </div>
 
@@ -162,27 +162,34 @@ const CompanyDetailView = ({ company, onBackClick, onUpload }: { company: Compan
     return (
     <div className="space-y-6">
         <header className="space-y-2">
-            <Button variant="ghost" onClick={onBackClick} className="pl-0 h-auto p-0 text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" onClick={onBackClick} className="pl-0 h-auto p-0 mb-4 text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Volver a la lista de empresas
+                Volver a la lista de clientes
             </Button>
-            <h1 className="text-3xl font-bold">{company.name}</h1>
-            <p className="text-muted-foreground">
-                Visión 360° del cliente.
-            </p>
+            <div className="flex items-center gap-4">
+                <div className="bg-primary/10 p-4 rounded-lg">
+                    <Building className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                    <h1 className="text-3xl font-bold">{company.name}</h1>
+                    <p className="text-muted-foreground">
+                        Visión 360° del cliente. Plan: <span className="font-semibold text-primary">{company.plan}</span>
+                    </p>
+                </div>
+            </div>
         </header>
 
         <Tabs defaultValue="employees">
             <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="employees"><Users className="mr-2 h-4 w-4" /> Empleados</TabsTrigger>
-                <TabsTrigger value="documents"><FileText className="mr-2 h-4 w-4" /> Documentos</TabsTrigger>
+                <TabsTrigger value="employees"><Users className="mr-2 h-4 w-4" /> Empleados ({company.employees.length})</TabsTrigger>
+                <TabsTrigger value="documents"><FileText className="mr-2 h-4 w-4" /> Documentos ({company.documents.length})</TabsTrigger>
                 <TabsTrigger value="log"><BookOpen className="mr-2 h-4 w-4" /> Bitácora</TabsTrigger>
             </TabsList>
             <TabsContent value="employees" className="mt-4">
                  <Card>
                     <CardHeader>
-                        <CardTitle>Lista de Empleados</CardTitle>
-                        <CardDescription>Gestiona los documentos de cada empleado de {company.name}.</CardDescription>
+                        <CardTitle>Plantilla de {company.name}</CardTitle>
+                        <CardDescription>Gestiona la documentación individual de cada empleado.</CardDescription>
                     </CardHeader>
                     <CardContent>
                        <Table>
@@ -197,7 +204,7 @@ const CompanyDetailView = ({ company, onBackClick, onUpload }: { company: Compan
                                 {company.employees.map(employee => (
                                     <TableRow key={employee.id}>
                                         <TableCell className="font-medium">{employee.name}</TableCell>
-                                        <TableCell>{employee.position}</TableCell>
+                                        <TableCell className="text-muted-foreground">{employee.position}</TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="outline" size="sm" onClick={() => handleOpenModal(employee)}>
                                                 <Upload className="mr-2 h-4 w-4" />
@@ -218,8 +225,8 @@ const CompanyDetailView = ({ company, onBackClick, onUpload }: { company: Compan
                             <CardTitle>Gestor Documental</CardTitle>
                             <CardDescription>Documentos generales y de empleados de la empresa.</CardDescription>
                         </div>
-                        <Button size="sm" onClick={() => handleOpenModal()}>
-                            <Upload className="mr-2 h-4 w-4" /> Añadir
+                        <Button onClick={() => handleOpenModal()}>
+                            <Upload className="mr-2 h-4 w-4" /> Añadir Documento
                         </Button>
                     </CardHeader>
                     <CardContent>
@@ -234,9 +241,12 @@ const CompanyDetailView = ({ company, onBackClick, onUpload }: { company: Compan
                             <TableBody>
                                 {company.documents.map(doc => (
                                     <TableRow key={doc.id}>
-                                        <TableCell className="font-medium">{doc.name}</TableCell>
-                                        <TableCell>{doc.employeeName || 'General'}</TableCell>
-                                        <TableCell>{doc.uploadDate}</TableCell>
+                                        <TableCell className="font-medium flex items-center gap-2">
+                                            <FileText className="h-4 w-4 text-muted-foreground" />
+                                            {doc.name}
+                                        </TableCell>
+                                        <TableCell>{doc.employeeName || <span className="text-muted-foreground italic">General</span>}</TableCell>
+                                        <TableCell className="text-muted-foreground">{doc.uploadDate}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -251,7 +261,11 @@ const CompanyDetailView = ({ company, onBackClick, onUpload }: { company: Compan
                         <CardDescription>Registro de llamadas, reuniones y correos importantes.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-center text-muted-foreground py-8">Próximamente: Una bitácora interactiva para el seguimiento de clientes.</p>
+                        <div className="text-center text-muted-foreground py-12 px-6 border-2 border-dashed rounded-lg">
+                            <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
+                            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-200">Bitácora en desarrollo</h3>
+                            <p className="mt-1 text-sm text-gray-500">Próximamente: Una bitácora interactiva para el seguimiento de clientes.</p>
+                        </div>
                     </CardContent>
                 </Card>
             </TabsContent>
@@ -295,7 +309,7 @@ export default function ConsultorDashboard() {
     // Actualizar el estado
     const updatedCompanies = allCompanies.map(c => {
         if (c.id === selectedCompany.id) {
-            const updatedCompany = { ...c, documents: [...c.documents, newDocument] };
+            const updatedCompany = { ...c, documents: [newDocument, ...c.documents] };
             setSelectedCompany(updatedCompany); // Actualiza la vista de detalle en tiempo real
             return updatedCompany;
         }
@@ -307,7 +321,7 @@ export default function ConsultorDashboard() {
   };
 
   return (
-    <div>
+    <div className="p-4 sm:p-6 lg:p-8">
         {selectedCompany ? (
             <CompanyDetailView company={selectedCompany} onBackClick={handleBackClick} onUpload={handleUpload} />
         ) : (

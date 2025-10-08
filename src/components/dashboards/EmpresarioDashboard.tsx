@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { Users, Briefcase, Plane, Building2, UserSearch, PlayCircle, UserMinus, UserCheck } from "lucide-react";
+import { Users, Briefcase, Plane, Building2, PlayCircle, UserMinus, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +22,7 @@ const totalEmpleados = humanCapitalData.activos + humanCapitalData.baja + humanC
 const chartData = [
   { name: "Activos", value: humanCapitalData.activos },
   { name: "De Baja", value: humanCapitalData.baja },
-  { name: "Vacaciones", value: humanCapitalData.vacaciones },
+  { name: "De Vacaciones", value: humanCapitalData.vacaciones },
 ];
 
 const COLORS = ["#16A34A", "#DC2626", "#F97316"]; // Verde, Rojo, Naranja
@@ -38,10 +38,10 @@ const jobPositions = [
 
 export default function EmpresarioDashboard() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 sm:p-6 lg:p-8">
       <header>
-        <h1 className="text-3xl font-bold">Dashboard del Empresario 💼</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-4xl font-bold tracking-tight">Dashboard Empresarial</h1>
+        <p className="text-muted-foreground mt-2">
           Resumen de la situación actual de tu capital humano y actividades.
         </p>
       </header>
@@ -52,31 +52,31 @@ export default function EmpresarioDashboard() {
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Total</CardTitle>
+                      <CardTitle className="text-sm font-medium">Total Empleados</CardTitle>
                       <Users className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
                       <div className="text-2xl font-bold">{totalEmpleados}</div>
-                      <p className="text-xs text-muted-foreground">Empleados</p>
+                      <p className="text-xs text-muted-foreground">En plantilla</p>
                   </CardContent>
               </Card>
               <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Activos</CardTitle>
-                      <UserCheck className="h-4 w-4 text-green-500" />
+                      <UserCheck className="h-4 w-4 text-green-600" />
                   </CardHeader>
                   <CardContent>
-                      <div className="text-2xl font-bold">{humanCapitalData.activos}</div>
-                       <p className="text-xs text-muted-foreground">Trabajando</p>
+                      <div className="text-2xl font-bold text-green-600">{humanCapitalData.activos}</div>
+                       <p className="text-xs text-muted-foreground">Trabajando hoy</p>
                   </CardContent>
               </Card>
               <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">De Baja</CardTitle>
-                      <UserMinus className="h-4 w-4 text-red-500" />
+                      <UserMinus className="h-4 w-4 text-red-600" />
                   </CardHeader>
                   <CardContent>
-                      <div className="text-2xl font-bold">{humanCapitalData.baja}</div>
+                      <div className="text-2xl font-bold text-red-600">{humanCapitalData.baja}</div>
                       <p className="text-xs text-muted-foreground">Ausencia médica</p>
                   </CardContent>
               </Card>
@@ -86,7 +86,7 @@ export default function EmpresarioDashboard() {
                       <Plane className="h-4 w-4 text-orange-500" />
                   </CardHeader>
                   <CardContent>
-                      <div className="text-2xl font-bold">{humanCapitalData.vacaciones}</div>
+                      <div className="text-2xl font-bold text-orange-500">{humanCapitalData.vacaciones}</div>
                       <p className="text-xs text-muted-foreground">Disfrutando</p>
                   </CardContent>
               </Card>
@@ -112,11 +112,12 @@ export default function EmpresarioDashboard() {
                                       <Building2 className="h-8 w-8 text-primary" />
                                       <div>
                                           <CardTitle>Organigrama</CardTitle>
-                                          <CardDescription>Estructura de la empresa.</CardDescription>
+                                          <CardDescription>Estructura jerárquica.</CardDescription>
                                       </div>
                                   </CardHeader>
                                   <CardContent>
-                                      <p className="text-sm text-muted-foreground">Próximamente: Visualiza y gestiona el organigrama.</p>
+                                      <p className="text-sm text-muted-foreground">Visualiza y gestiona la estructura de tu empresa.</p>
+                                      <Button variant="outline" className="mt-4 w-full">Ver Organigrama</Button>
                                   </CardContent>
                               </Card>
                               <Card className="hover:shadow-md transition-shadow">
@@ -128,7 +129,8 @@ export default function EmpresarioDashboard() {
                                       </div>
                                   </CardHeader>
                                   <CardContent>
-                                      <p className="text-sm text-muted-foreground">Próximamente: Define y analiza los perfiles de puesto.</p>
+                                      <p className="text-sm text-muted-foreground">Define y analiza los perfiles de puesto clave.</p>
+                                      <Button variant="outline" className="mt-4 w-full">Gestionar Puestos</Button>
                                   </CardContent>
                               </Card>
                           </div>
@@ -137,7 +139,7 @@ export default function EmpresarioDashboard() {
                           <Card>
                               <CardHeader>
                                   <CardTitle>Gestión de Búsquedas</CardTitle>
-                                  <CardDescription>Activa y gestiona los procesos de selección.</CardDescription>
+                                  <CardDescription>Activa y gestiona los procesos de selección de personal.</CardDescription>
                               </CardHeader>
                               <CardContent>
                                   <Table>
@@ -153,7 +155,7 @@ export default function EmpresarioDashboard() {
                                               <TableRow key={puesto.id}>
                                                   <TableCell className="font-medium">{puesto.title}</TableCell>
                                                   <TableCell>
-                                                    <Badge variant={puesto.status === 'Activo' ? 'default' : 'secondary'}>
+                                                    <Badge variant={puesto.status === 'Activo' ? 'default' : 'outline'}>
                                                         {puesto.status}
                                                     </Badge>
                                                   </TableCell>
@@ -180,6 +182,7 @@ export default function EmpresarioDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Distribución de Empleados</CardTitle>
+              <CardDescription>Estado actual de la plantilla.</CardDescription>
             </CardHeader>
             <CardContent className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -192,7 +195,6 @@ export default function EmpresarioDashboard() {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -216,3 +218,5 @@ export default function EmpresarioDashboard() {
     </div>
   );
 }
+
+    
