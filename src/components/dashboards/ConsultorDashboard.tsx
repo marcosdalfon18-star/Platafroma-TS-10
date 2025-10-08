@@ -1,10 +1,12 @@
+
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, PlusCircle, ArrowLeft, Briefcase, FileText, BookOpen, Users, Upload, Building } from "lucide-react";
-import Image from "next/image";
+import { Search, PlusCircle, ArrowLeft, Users, Upload, Building, FileText, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import UploadDocumentModal from "@/components/modals/UploadDocumentModal";
 
 // --- Tipos de datos ampliados ---
@@ -19,6 +21,7 @@ type Document = {
   name: string;
   employeeId?: number;
   employeeName?: string;
+  uploadDate: string;
 };
 
 type Company = {
@@ -44,8 +47,8 @@ const companies: Company[] = [
       { id: 102, name: "Carlos Pérez", position: "Líder de Proyecto" },
     ],
     documents: [
-      { id: 1001, name: "Contrato de Ana García.pdf", employeeId: 101, employeeName: "Ana García" },
-      { id: 1002, name: "Plan de Proyecto Q3.docx" },
+      { id: 1001, name: "Contrato de Ana García.pdf", employeeId: 101, employeeName: "Ana García", uploadDate: "2023-05-20" },
+      { id: 1002, name: "Plan de Proyecto Q3.docx", uploadDate: "2023-06-01"  },
     ],
   },
   {
@@ -58,7 +61,7 @@ const companies: Company[] = [
         { id: 201, name: "Lucía Martínez", position: "Chef Principal" },
     ],
     documents: [
-        { id: 2001, name: "Certificado Sanitario.pdf" },
+        { id: 2001, name: "Certificado Sanitario.pdf", uploadDate: "2023-03-15"  },
     ]
   },
   {
@@ -72,8 +75,8 @@ const companies: Company[] = [
         { id: 302, name: "Sofía López", position: "Arquitecta" },
     ],
     documents: [
-        { id: 3001, name: "Planos Edificio Central.pdf" },
-        { id: 3002, name: "Contrato Roberto Fernández.pdf", employeeId: 301, employeeName: "Roberto Fernández"},
+        { id: 3001, name: "Planos Edificio Central.pdf", uploadDate: "2023-07-10"  },
+        { id: 3002, name: "Contrato Roberto Fernández.pdf", employeeId: 301, employeeName: "Roberto Fernández", uploadDate: "2023-01-25" },
     ]
   },
 ];
@@ -81,26 +84,30 @@ const companies: Company[] = [
 // --- Componentes ---
 
 const CompanyCard = ({ company, onManageClick }: { company: Company; onManageClick: (company: Company) => void }) => (
-    <Card className="overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl flex flex-col">
+    <Card className="overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl flex flex-col">
         <CardHeader>
-            <div className="flex items-center gap-4">
+            <div className="flex items-start gap-4">
                  <div className="bg-muted p-3 rounded-lg">
                      <Building className="h-6 w-6 text-muted-foreground" />
                  </div>
-                <div>
-                    <CardTitle className="text-lg">{company.name}</CardTitle>
+                <div className="flex-1">
+                    <CardTitle className="text-lg font-semibold">{company.name}</CardTitle>
                     <CardDescription>{company.industry}</CardDescription>
                 </div>
             </div>
         </CardHeader>
-        <CardContent className="flex-grow">
-            <div className="text-sm text-muted-foreground space-y-1">
-                <p><strong>Empleados:</strong> {company.employeesCount}</p>
-                <p><strong>Plan Contratado:</strong> <span className="font-semibold text-primary">{company.plan}</span></p>
+        <CardContent className="flex-grow space-y-2">
+            <div className="text-sm flex justify-between items-center">
+                <span className="text-muted-foreground">Empleados</span>
+                <span className="font-bold">{company.employeesCount}</span>
+            </div>
+             <div className="text-sm flex justify-between items-center">
+                <span className="text-muted-foreground">Plan</span>
+                <span className="font-bold text-primary">{company.plan}</span>
             </div>
         </CardContent>
         <CardFooter>
-            <Button className="w-full" onClick={() => onManageClick(company)}>Gestionar Cliente</Button>
+            <Button className="w-full" variant="outline" onClick={() => onManageClick(company)}>Gestionar</Button>
         </CardFooter>
     </Card>
 );
@@ -108,8 +115,8 @@ const CompanyCard = ({ company, onManageClick }: { company: Company; onManageCli
 const CompanyListView = ({ onManageClick }: { onManageClick: (company: Company) => void }) => (
   <>
     <header className="mb-8">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Centro de Mando del Consultor 🧐</h1>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+      <h1 className="text-3xl font-bold">Centro de Mando del Consultor 🧐</h1>
+      <p className="text-muted-foreground mt-1">
         Gestiona todas tus empresas cliente desde un único lugar.
       </p>
     </header>
@@ -153,75 +160,103 @@ const CompanyDetailView = ({ company, onBackClick, onUpload }: { company: Compan
     };
 
     return (
-    <div>
-        <header className="mb-8">
-            <Button variant="ghost" onClick={onBackClick} className="mb-4">
+    <div className="space-y-6">
+        <header className="space-y-2">
+            <Button variant="ghost" onClick={onBackClick} className="pl-0 h-auto p-0 text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Volver a la lista de empresas
             </Button>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Gestionando: {company.name}</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <h1 className="text-3xl font-bold">{company.name}</h1>
+            <p className="text-muted-foreground">
                 Visión 360° del cliente.
             </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center"><Users className="mr-2 h-5 w-5" /> Lista de Empleados</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                       <ul className="space-y-2">
-                            {company.employees.map(employee => (
-                                <li key={employee.id} className="flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                                    <div>
-                                        <p className="font-medium">{employee.name}</p>
-                                        <p className="text-xs text-muted-foreground">{employee.position}</p>
-                                    </div>
-                                    <Button variant="outline" size="sm" onClick={() => handleOpenModal(employee)}>
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Subir Documento
-                                    </Button>
-                                </li>
-                            ))}
-                       </ul>
-                    </CardContent>
-                </Card>
+        <Tabs defaultValue="employees">
+            <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="employees"><Users className="mr-2 h-4 w-4" /> Empleados</TabsTrigger>
+                <TabsTrigger value="documents"><FileText className="mr-2 h-4 w-4" /> Documentos</TabsTrigger>
+                <TabsTrigger value="log"><BookOpen className="mr-2 h-4 w-4" /> Bitácora</TabsTrigger>
+            </TabsList>
+            <TabsContent value="employees" className="mt-4">
                  <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center"><BookOpen className="mr-2 h-5 w-5" /> Bitácora de Asesoramiento</CardTitle>
+                        <CardTitle>Lista de Empleados</CardTitle>
+                        <CardDescription>Gestiona los documentos de cada empleado de {company.name}.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">Próximamente: Registro de llamadas, reuniones y correos.</p>
+                       <Table>
+                           <TableHeader>
+                               <TableRow>
+                                   <TableHead>Nombre</TableHead>
+                                   <TableHead>Puesto</TableHead>
+                                   <TableHead className="text-right">Acciones</TableHead>
+                               </TableRow>
+                           </TableHeader>
+                           <TableBody>
+                                {company.employees.map(employee => (
+                                    <TableRow key={employee.id}>
+                                        <TableCell className="font-medium">{employee.name}</TableCell>
+                                        <TableCell>{employee.position}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="outline" size="sm" onClick={() => handleOpenModal(employee)}>
+                                                <Upload className="mr-2 h-4 w-4" />
+                                                Subir Documento
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                           </TableBody>
+                       </Table>
                     </CardContent>
                 </Card>
-            </div>
-            <div className="md:col-span-1">
+            </TabsContent>
+            <TabsContent value="documents" className="mt-4">
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
-                           <div className="flex items-center"><FileText className="mr-2 h-5 w-5" /> Gestor Documental</div>
-                           <Button size="sm" onClick={() => handleOpenModal()}>
-                                <Upload className="mr-2 h-4 w-4" /> Añadir
-                           </Button>
-                        </CardTitle>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>Gestor Documental</CardTitle>
+                            <CardDescription>Documentos generales y de empleados de la empresa.</CardDescription>
+                        </div>
+                        <Button size="sm" onClick={() => handleOpenModal()}>
+                            <Upload className="mr-2 h-4 w-4" /> Añadir
+                        </Button>
                     </CardHeader>
                     <CardContent>
-                        <ul className="space-y-2 text-sm">
-                            {company.documents.map(doc => (
-                                <li key={doc.id} className="flex flex-col p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                                    <span className="font-medium">{doc.name}</span>
-                                    {doc.employeeName && (
-                                        <span className="text-xs text-blue-500">Empleado: {doc.employeeName}</span>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Nombre del Archivo</TableHead>
+                                    <TableHead>Asociado a</TableHead>
+                                    <TableHead>Fecha de Subida</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {company.documents.map(doc => (
+                                    <TableRow key={doc.id}>
+                                        <TableCell className="font-medium">{doc.name}</TableCell>
+                                        <TableCell>{doc.employeeName || 'General'}</TableCell>
+                                        <TableCell>{doc.uploadDate}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </CardContent>
                 </Card>
-            </div>
-        </div>
+            </TabsContent>
+             <TabsContent value="log" className="mt-4">
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Bitácora de Asesoramiento</CardTitle>
+                        <CardDescription>Registro de llamadas, reuniones y correos importantes.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-center text-muted-foreground py-8">Próximamente: Una bitácora interactiva para el seguimiento de clientes.</p>
+                    </CardContent>
+                </Card>
+            </TabsContent>
+        </Tabs>
+        
          <UploadDocumentModal 
             isOpen={isModalOpen}
             onClose={handleCloseModal}
@@ -254,6 +289,7 @@ export default function ConsultorDashboard() {
       name: file.name,
       employeeId: employee?.id,
       employeeName: employee?.name,
+      uploadDate: new Date().toISOString().split('T')[0], // Formato YYYY-MM-DD
     };
     
     // Actualizar el estado
@@ -271,7 +307,7 @@ export default function ConsultorDashboard() {
   };
 
   return (
-    <div className="bg-background">
+    <div>
         {selectedCompany ? (
             <CompanyDetailView company={selectedCompany} onBackClick={handleBackClick} onUpload={handleUpload} />
         ) : (
@@ -280,3 +316,5 @@ export default function ConsultorDashboard() {
     </div>
   );
 }
+
+    
