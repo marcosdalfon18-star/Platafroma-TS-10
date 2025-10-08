@@ -75,7 +75,8 @@
  
 @layer base {
   * {
-    @apply border-border;
+    /* This is the fix: Directly apply the CSS variable */
+    border-color: hsl(var(--border));
   }
   body {
     background-color: hsl(var(--background));
