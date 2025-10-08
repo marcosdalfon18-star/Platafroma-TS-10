@@ -201,9 +201,9 @@ export default function LandingPage() {
     const [isForgotOpen, setIsForgotOpen] = useState(false);
 
     return (
-        <div className="bg-gray-50 font-sans h-full">
-            <main className="h-full">
-                <section id="inicio" className="gradient-bg text-white py-20 h-full flex items-center justify-center">
+        <div className="font-sans h-full gradient-bg text-white">
+            <main className="h-full flex items-center justify-center">
+                <section id="inicio" className="py-20">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center animate-fade-in">
                             <h2 className="text-5xl md:text-6xl font-bold mb-6">
