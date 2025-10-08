@@ -1,32 +1,32 @@
 
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+'use client';
 
-export default function HomePage() {
+import Login from "@/components/login";
+import Signup from "@/components/signup";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+
+export default function AuthPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">¡Bienvenido a tu Plataforma!</CardTitle>
-          <CardDescription>Este es el punto de partida de tu aplicación.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-            <p className="text-center text-muted-foreground">
-                Desde aquí, puedes navegar a las diferentes secciones de tu aplicación.
-            </p>
-          <Link href="/ussertable" passHref>
-            <Button className="w-full">
-              Ir a la Tabla de Usuarios
-            </Button>
-          </Link>
-          <Link href="/login" passHref>
-            <Button variant="outline" className="w-full">
-              Iniciar Sesión
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
+       <div className="w-full max-w-md">
+         <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold">TS Plataforma Digital</h1>
+            <p className="text-muted-foreground">Gestión de talento para un futuro sostenible.</p>
+         </div>
+        <Tabs defaultValue="login" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
+            <TabsTrigger value="signup">Crear Cuenta</TabsTrigger>
+          </TabsList>
+          <TabsContent value="login">
+            <Login />
+          </TabsContent>
+          <TabsContent value="signup">
+            <Signup />
+          </TabsContent>
+        </Tabs>
+       </div>
     </div>
   );
 }
