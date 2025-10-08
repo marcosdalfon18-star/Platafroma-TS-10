@@ -63,46 +63,41 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const [userRole, setUserRole] = useState<Role>("consultor");
-  // Start with no user, to show the login page first.
   const [user, setUser] = useState<User | null>(null); 
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    // If there's a user, and they are on the root page, redirect to dashboard.
     if (user && pathname === '/') {
         router.push('/dashboard');
     }
-    // If there's no user, and they are not on the root page, redirect to root to log in.
-    if (!user && pathname !== '/') {
-        router.push('/');
-    }
   }, [user, pathname, router]);
   
-  const content = user ? (
+  const isAppPage = pathname !== '/';
+
+  const content = isAppPage && user ? (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
           <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
               <Header userRole={userRole} setUserRole={setUserRole} />
-              <main className="p-4 sm:p-6 lg:p-8">
+              <main className="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
                   {children}
               </main>
           </div>
       </SidebarProvider>
   ) : (
-      // Render children directly for auth pages (the root page in this case)
       children
   );
 
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
+      <body className="font-body antialiased h-full">
         <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
             {content}
         </RoleContext.Provider>
