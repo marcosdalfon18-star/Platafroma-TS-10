@@ -7,7 +7,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -15,6 +15,7 @@ interface RoleContextType {
     userRole: Role;
     setUserRole: React.Dispatch<React.SetStateAction<Role>>;
     user: User | null;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const mockUser: User = {
@@ -62,12 +63,23 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const [userRole, setUserRole] = useState<Role>("consultor");
-  const [user, setUser] = useState<User | null>(mockUser);
-  
+  // Start with no user, to show the login page first.
+  const [user, setUser] = useState<User | null>(null); 
+  const router = useRouter();
   const pathname = usePathname();
-  const isAuthPage = pathname === "/";
+
+  useEffect(() => {
+    // If there's a user, and they are on the root page, redirect to dashboard.
+    if (user && pathname === '/') {
+        router.push('/dashboard');
+    }
+    // If there's no user, and they are not on the root page, redirect to root to log in.
+    if (!user && pathname !== '/') {
+        router.push('/');
+    }
+  }, [user, pathname, router]);
   
-  const content = user && !isAuthPage ? (
+  const content = user ? (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
           <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
@@ -78,6 +90,7 @@ export default function AppLayout({
           </div>
       </SidebarProvider>
   ) : (
+      // Render children directly for auth pages (the root page in this case)
       children
   );
 
@@ -90,7 +103,7 @@ export default function AppLayout({
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <RoleContext.Provider value={{ userRole, setUserRole, user }}>
+        <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
             {content}
         </RoleContext.Provider>
         <Toaster />

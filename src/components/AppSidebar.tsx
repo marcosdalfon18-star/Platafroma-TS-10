@@ -16,8 +16,7 @@ import {
 import { NAV_LINKS, type NavLink } from "@/lib/nav-links";
 import { Button } from "@/components/ui/button";
 import { LogOut, Settings } from "lucide-react";
-import { signOut } from "firebase/auth";
-import { auth } from "@/firebase";
+import { useCurrentRole } from "@/app/layout";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -27,11 +26,11 @@ interface AppSidebarProps {
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   const pathname = usePathname();
-  const router = useRouter();
+  const { setUser } = useCurrentRole();
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.push("/");
+  const handleLogout = () => {
+    // Simulate logout by setting user to null
+    setUser(null);
   };
 
   const hasAccess = (link: NavLink) => {
@@ -42,7 +41,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
-            
             <span className="text-lg font-semibold">TS Plataforma Digital</span>
         </div>
       </SidebarHeader>

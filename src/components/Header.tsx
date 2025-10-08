@@ -8,8 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Bell, Circle, LogOut } from "lucide-react";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { auth } from "@/firebase";
-import { signOut } from "firebase/auth";
 import { useCurrentRole } from "@/app/layout";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
@@ -20,17 +18,16 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
-    const router = useRouter();
-    const { user } = useCurrentRole();
+    const { user, setUser } = useCurrentRole();
     const {
         permissionStatus,
         requestPermission,
         sendTestNotification
     } = usePushNotifications();
 
-    const handleLogout = async () => {
-        await signOut(auth);
-        router.push("/");
+    const handleLogout = () => {
+        // Simulate logout by setting user to null
+        setUser(null);
     };
 
     const getStatusColor = () => {
