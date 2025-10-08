@@ -64,6 +64,7 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="text-base"
           />
       </div>
       <div className="grid w-full items-center gap-1.5">
@@ -75,26 +76,22 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="text-base"
           />
       </div>
-      <Button type="submit" className="w-full mt-2">Acceder</Button>
+      <Button type="submit" className="w-full mt-2 text-base">Acceder</Button>
     </form>
   );
 }
 
-
 export default function AuthPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
        <div className="w-full max-w-md">
-         <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 leading-relaxed">Bienvenido a TS Plataforma Digital</h1>
-            <p className="text-muted-foreground leading-relaxed">Gestiona el talento de forma sostenible</p>
-         </div>
         <Card>
-            <CardHeader>
-                <CardTitle className="text-2xl">Accede a tu cuenta</CardTitle>
-                <CardDescription>Ingresa tus credenciales para continuar.</CardDescription>
+            <CardHeader className="text-center">
+                <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-100">Accede a tu cuenta</CardTitle>
+                <CardDescription className="text-gray-600 dark:text-gray-300">Ingresa tus credenciales para continuar.</CardDescription>
             </CardHeader>
             <CardContent>
                 <LoginForm />
