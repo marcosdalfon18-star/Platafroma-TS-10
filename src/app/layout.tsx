@@ -2,15 +2,12 @@
 "use client";
 
 import React, { useState, createContext, useContext, useEffect } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/firebase";
+import { User } from "firebase/auth";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
-import { usePathname, useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -19,6 +16,35 @@ interface RoleContextType {
     setUserRole: React.Dispatch<React.SetStateAction<Role>>;
     user: User | null;
 }
+
+const mockUser: User = {
+    uid: "mock-user-uid",
+    email: "consultor@test.com",
+    displayName: "Mock User",
+    photoURL: null,
+    phoneNumber: null,
+    providerId: "password",
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    refreshToken: "",
+    tenantId: null,
+    delete: async () => {},
+    getIdToken: async () => "",
+    getIdTokenResult: async () => ({
+        token: "",
+        authTime: "",
+        issuedAtTime: "",
+        signInProvider: null,
+        signInSecondFactor: null,
+        expirationTime: "",
+        claims: {},
+    }),
+    reload: async () => {},
+    toJSON: () => ({}),
+};
+
 
 const RoleContext = createContext<RoleContextType | null>(null);
 
@@ -36,51 +62,12 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const [userRole, setUserRole] = useState<Role>("consultor");
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(mockUser);
   
   const pathname = usePathname();
-  const router = useRouter();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // For development purposes, allow role switching for a specific user
-        if (currentUser.email === 'consultor@test.com') {
-          // The role will be managed by the Header component, so we don't set it here.
-        } else {
-          const docRef = doc(db, "users", currentUser.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUserRole(docSnap.data().role as Role);
-          }
-        }
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-      if (loading) return;
-
-      const isAuthPage = pathname === "/";
-
-      if (user && isAuthPage) {
-          router.push("/dashboard");
-      } else if (!user && !isAuthPage) {
-          router.push("/");
-      }
-  }, [user, loading, router, pathname]);
-
   const isAuthPage = pathname === "/";
   
-  const content = loading ? (
-    <div className="flex items-center justify-center min-h-screen">
-      <Loader2 className="h-8 w-8 animate-spin" />
-    </div>
-  ) : user && !isAuthPage ? (
+  const content = user && !isAuthPage ? (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
           <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
