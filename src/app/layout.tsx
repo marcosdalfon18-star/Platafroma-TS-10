@@ -66,14 +66,9 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // This effect now correctly handles the initial auth state.
-    // For this dev setup, we'll simulate a logged-in user if they are not on the landing page
-    // and a logged-out user if they are.
     if (pathname === '/') {
         setUser(null);
     } else {
-        // If refreshing any page other than landing, assume user is logged in.
-        // In a real app, this would be a call to check Firebase Auth state.
         if (!user) {
             setUser(mockUser);
         }

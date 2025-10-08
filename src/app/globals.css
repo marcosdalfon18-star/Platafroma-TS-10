@@ -75,8 +75,8 @@
  
 @layer base {
   * {
-    /* This is the fix: Directly apply the CSS variable */
     border-color: hsl(var(--border));
+    box-sizing: border-box;
   }
   body {
     background-color: hsl(var(--background));
@@ -86,12 +86,13 @@
   html {
     scroll-behavior: smooth;
   }
-  .gradient-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
 }
 
 @layer utilities {
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
     .card-hover {
         @apply transition-transform duration-300 ease-in-out;
     }
