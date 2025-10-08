@@ -88,8 +88,8 @@ export default function AuthPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
        <div className="w-full max-w-md">
          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Bienvenido a TS Plataforma Digital</h1>
-            <p className="text-muted-foreground">Gestiona el talento de forma sostenible</p>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 leading-relaxed">Bienvenido a TS Plataforma Digital</h1>
+            <p className="text-muted-foreground leading-relaxed">Gestiona el talento de forma sostenible</p>
          </div>
         <Card>
             <CardHeader>
