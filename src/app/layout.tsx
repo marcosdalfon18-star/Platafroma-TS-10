@@ -1,4 +1,3 @@
-
 "use client";
 
 import "@/app/globals.css";
@@ -29,36 +28,6 @@ export const useCurrentRole = () => {
     return context;
 };
 
-// Mock User object to simulate login
-const mockUser = {
-  uid: 'mock-user-uid',
-  email: 'consultor@test.com',
-  displayName: 'Mock User',
-  photoURL: null,
-  phoneNumber: null,
-  providerId: 'password',
-  emailVerified: true,
-  isAnonymous: false,
-  metadata: {},
-  providerData: [],
-  refreshToken: '',
-  tenantId: null,
-  delete: async () => {},
-  getIdToken: async () => '',
-  getIdTokenResult: async () => ({
-    token: '',
-    authTime: '',
-    issuedAtTime: '',
-    signInProvider: null,
-    signInSecondFactor: null,
-    expirationTime: '',
-    claims: {},
-  }),
-  reload: async () => {},
-  toJSON: () => ({}),
-};
-
-
 function AppContent({ children }: { children: React.ReactNode }) {
   const { user, setUser, userRole, setUserRole } = useCurrentRole();
   const [loading, setLoading] = useState(true);
@@ -66,43 +35,34 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // This effect handles the initial user state based on the path.
-    // If on the landing page, ensure user is null.
-    // If on other pages, we can simulate a logged-in user if not already set.
-    if (pathname === '/') {
-        // If we are on the landing page, we should not have a user session.
-        // This can also be where you check for a real session token.
-        if (user) setUser(null); 
+    // Simula la carga inicial de sesión
+    const mockSession = localStorage.getItem('mockUserSession');
+    if (mockSession) {
+      setUser(JSON.parse(mockSession));
     }
     setLoading(false);
-  }, [pathname, user, setUser]);
+  }, [setUser]);
   
   useEffect(() => {
-      // This effect handles redirection based on auth state.
       if (loading) return;
 
       if (user && pathname === "/") {
-          // If the user is logged in and tries to access the landing page, redirect to dashboard.
           router.push("/dashboard");
       } else if (!user && pathname !== "/") {
-          // If the user is not logged in and tries to access any other page, redirect to landing.
           router.push("/");
       }
   }, [user, loading, pathname, router]);
 
-  const isAuthPage = pathname === "/";
+  const isLandingPage = pathname === "/";
   
-  if (isAuthPage) {
-    // For the landing page, just render the children without any layout.
+  if (isLandingPage) {
     return <>{children}</>;
   }
   
-  // For all other pages, show a loading state until redirection logic completes.
   if (loading || !user) {
       return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   }
 
-  // Once user is confirmed and we are not on the auth page, render the full app layout.
   return (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
@@ -133,7 +93,7 @@ export default function AppLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
       </head>
-      <body className="h-full font-body antialiased">
+      <body className="h-full font-body antialiased bg-background">
         <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
             <AppContent>{children}</AppContent>
         </RoleContext.Provider>

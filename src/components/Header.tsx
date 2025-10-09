@@ -26,7 +26,8 @@ const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
     } = usePushNotifications();
 
     const handleLogout = () => {
-        // Simulate logout by setting user to null
+        // Clear mock session
+        localStorage.removeItem('mockUserSession');
         setUser(null);
     };
 

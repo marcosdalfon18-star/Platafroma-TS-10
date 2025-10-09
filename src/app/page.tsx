@@ -104,14 +104,15 @@ export default function LandingPage() {
     const router = useRouter();
 
     const handleLoginSuccess = () => {
+      // Persist mock session
+      localStorage.setItem('mockUserSession', JSON.stringify(mockUser));
       setUser(mockUser);
-      router.push('/dashboard');
+      // No need to push, the layout effect will handle it
     }
 
     return (
-        <div className="font-sans min-h-screen flex flex-col">
-            {/* Hero Section */}
-            <main id="inicio" className="flex-grow flex items-center justify-center gradient-bg text-white">
+        <div className="min-h-screen flex flex-col gradient-bg">
+            <main id="inicio" className="flex-grow flex items-center justify-center text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center animate-fade-in">
                         <h2 className="text-5xl md:text-6xl font-bold mb-6">

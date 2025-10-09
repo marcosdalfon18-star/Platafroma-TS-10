@@ -29,7 +29,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   const { setUser } = useCurrentRole();
 
   const handleLogout = () => {
-    // Simulate logout by setting user to null
+    // Clear mock session
+    localStorage.removeItem('mockUserSession');
     setUser(null);
   };
 
