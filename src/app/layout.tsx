@@ -31,29 +31,6 @@ export const useCurrentRole = () => {
     return context;
 };
 
-// This component is a placeholder and will be restored later.
-const AppContent = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
-  const isAuthPage = pathname === "/";
-
-  if (isAuthPage) {
-    return <>{children}</>;
-  }
-
-  return (
-      <SidebarProvider>
-        <AppSidebar userRole={"consultor"} />
-        <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-          <Header userRole={"consultor"} setUserRole={() => {}} />
-          <main className="p-4 sm:p-6 lg:p-8">
-            {children}
-          </main>
-        </div>
-      </SidebarProvider>
-  );
-}
-
-
 export default function AppLayout({
   children,
 }: {
@@ -61,29 +38,40 @@ export default function AppLayout({
 }) {
   const [userRole, setUserRole] = useState<Role>("empleado");
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // Basic auth listener to be refined later
-   useEffect(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            setUser(user);
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                setUserRole(userData.role || "empleado");
-            }
-        } else {
-            setUser(null);
+      if (user) {
+        setUser(user);
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setUserRole(userData.role || "empleado");
         }
+        if (pathname === "/") {
+          router.push("/dashboard");
+        }
+      } else {
+        setUser(null);
+        if (pathname !== "/") {
+          router.push("/");
+        }
+      }
+      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [pathname, router]);
 
-
-  const pathname = usePathname();
   const isAuthPage = pathname === "/";
+
+   if (loading) {
+    return <div className="flex items-center justify-center h-full"><p>Cargando aplicación...</p></div>;
+  }
 
   return (
     <html lang="es" suppressHydrationWarning className="h-full">
@@ -114,4 +102,3 @@ export default function AppLayout({
     </html>
   );
 }
-
