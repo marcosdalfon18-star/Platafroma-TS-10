@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   Sidebar,
@@ -12,11 +12,19 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
-import { NAV_LINKS, type NavLink } from "@/lib/nav-links";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
+import { NAV_STRUCTURE, type NavLink, type NavGroup } from "@/lib/nav-links";
 import { Button } from "@/components/ui/button";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, ChevronRight } from "lucide-react";
 import { useCurrentRole } from "@/app/layout";
+import { cn } from "@/lib/utils";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -29,14 +37,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   const { setUser } = useCurrentRole();
 
   const handleLogout = () => {
-    // Clear mock session
     localStorage.removeItem('mockUserSession');
     setUser(null);
   };
 
-  const hasAccess = (link: NavLink) => {
-    return link.roles.includes(userRole);
+  const hasAccess = (itemRoles: Role[]) => {
+    return itemRoles.includes(userRole);
   };
+  
+  const isLinkActive = (href: string) => pathname === href;
 
   return (
     <Sidebar>
@@ -47,12 +56,52 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {NAV_LINKS.map((link) =>
-            hasAccess(link) ? (
+          {NAV_STRUCTURE.map((item, index) => {
+            if (!hasAccess(item.roles)) return null;
+
+            if ("links" in item) { // It's a NavGroup
+              const group = item as NavGroup;
+              const isGroupActive = group.links.some(link => isLinkActive(link.href));
+              
+              return (
+                <Collapsible key={group.label} defaultOpen={isGroupActive}>
+                    <CollapsibleTrigger className="w-full">
+                         <SidebarMenuButton 
+                            className="justify-between group"
+                            icon={Users}
+                            isActive={isGroupActive}
+                          >
+                            {group.label}
+                            <ChevronRight className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <SidebarMenuSub>
+                             {group.links.map((link) => 
+                                hasAccess(link.roles) ? (
+                                    <li key={link.href}>
+                                        <Link href={link.href} passHref legacyBehavior>
+                                            <SidebarMenuSubButton isActive={isLinkActive(link.href)}>
+                                                <link.icon />
+                                                <span>{link.label}</span>
+                                            </SidebarMenuSubButton>
+                                        </Link>
+                                    </li>
+                                ) : null
+                            )}
+                        </SidebarMenuSub>
+                    </CollapsibleContent>
+                </Collapsible>
+              );
+            }
+            
+            // It's a single NavLink
+            const link = item as NavLink;
+            return (
               <SidebarMenuItem key={link.href}>
                 <Link href={link.href} passHref legacyBehavior>
                   <SidebarMenuButton
-                    isActive={pathname === link.href}
+                    isActive={isLinkActive(link.href)}
                     icon={link.icon}
                     tooltip={{ children: link.label, side: "right" }}
                   >
@@ -60,8 +109,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
-            ) : null
-          )}
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>

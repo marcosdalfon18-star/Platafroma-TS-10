@@ -1,18 +1,19 @@
-
 import {
-  LayoutDashboard,
   Users,
+  Book,
   ClipboardList,
   Search,
+  MessageSquare,
+  BarChart2,
+  Cpu,
+  Target,
+  Megaphone,
+  LayoutDashboard,
+  Settings,
+  FileText,
   Wallet,
   Clock,
-  Target,
   ShieldCheck,
-  Cpu,
-  Book,
-  Megaphone,
-  FileText,
-  Settings,
 } from "lucide-react";
 
 export type NavLink = {
@@ -22,7 +23,13 @@ export type NavLink = {
   roles: Array<"consultor" | "empresario" | "empleado" | "gestor">;
 };
 
-export const NAV_LINKS: NavLink[] = [
+export type NavGroup = {
+  label: string;
+  links: NavLink[];
+  roles: Array<"consultor" | "empresario" | "empleado" | "gestor">;
+};
+
+export const NAV_STRUCTURE: (NavLink | NavGroup)[] = [
   {
     href: "/dashboard",
     label: "Dashboard",
@@ -30,22 +37,88 @@ export const NAV_LINKS: NavLink[] = [
     roles: ["consultor", "empresario", "empleado", "gestor"],
   },
   {
-    href: "/org-chart",
-    label: "Organigrama",
-    icon: Users,
+    label: "Gestión del Talento",
     roles: ["consultor", "empresario"],
+    links: [
+      {
+        href: "/org-chart",
+        label: "Organigrama",
+        icon: Users,
+        roles: ["consultor", "empresario"],
+      },
+      {
+        href: "/company-manual",
+        label: "Manual de Empresa",
+        icon: Book,
+        roles: ["consultor", "empresario", "empleado"],
+      },
+      {
+        href: "/job-analysis",
+        label: "Análisis de Puestos",
+        icon: ClipboardList,
+        roles: ["consultor", "empresario"],
+      },
+      {
+        href: "/selection-processes",
+        label: "Procesos de Selección",
+        icon: Search,
+        roles: ["consultor", "empresario"],
+      },
+       {
+        href: "/interviews",
+        label: "Entrevistas",
+        icon: MessageSquare,
+        roles: ["consultor", "empresario"],
+      },
+       {
+        href: "/training",
+        label: "Capacitaciones",
+        icon: ClipboardList,
+        roles: ["consultor", "empresario", "empleado"],
+      },
+       {
+        href: "/performance-evaluation",
+        label: "Evaluaciones",
+        icon: BarChart2,
+        roles: ["consultor", "empresario", "empleado"],
+      },
+    ],
+  },
+   {
+    label: "Marketing",
+    roles: ["consultor", "empresario"],
+    links: [
+        {
+            href: "/marketing",
+            label: "Marketing Estratégico",
+            icon: Target,
+            roles: ["consultor", "empresario"],
+        },
+    ]
   },
   {
-    href: "/job-analysis",
-    label: "Análisis de Puestos",
-    icon: ClipboardList,
+    label: "Agentes IA",
     roles: ["consultor", "empresario"],
+     links: [
+        {
+            href: "/ai-agents",
+            label: "Agentes IA",
+            icon: Cpu,
+            roles: ["consultor", "empresario"],
+        },
+    ]
   },
   {
-    href: "/selection-processes",
-    label: "Procesos de Selección",
-    icon: Search,
-    roles: ["consultor", "empresario"],
+    label: "Comunicaciones",
+    roles: ["consultor", "empresario", "gestor"],
+    links: [
+        {
+            href: "/communications",
+            label: "Comunicaciones",
+            icon: Megaphone,
+            roles: ["consultor", "empresario", "gestor"],
+        },
+    ]
   },
   {
     href: "/payroll",
@@ -60,34 +133,10 @@ export const NAV_LINKS: NavLink[] = [
     roles: ["consultor", "empresario", "empleado"],
   },
   {
-    href: "/marketing",
-    label: "Marketing Estratégico",
-    icon: Target,
-    roles: ["consultor", "empresario"],
-  },
-  {
     href: "/cybersecurity",
     label: "Ciberseguridad",
     icon: ShieldCheck,
     roles: ["consultor", "empresario"],
-  },
-  {
-    href: "/ai-agents",
-    label: "Agentes IA",
-    icon: Cpu,
-    roles: ["consultor", "empresario"],
-  },
-  {
-    href: "/company-manual",
-    label: "Manual de Empresa",
-    icon: Book,
-    roles: ["consultor", "empresario", "empleado"],
-  },
-  {
-    href: "/communications",
-    label: "Comunicaciones",
-    icon: Megaphone,
-    roles: ["consultor", "empresario", "gestor"],
   },
   {
     href: "/reports",
