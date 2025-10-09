@@ -66,40 +66,43 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // This effect handles the initial user state based on the path.
+    // If on the landing page, ensure user is null.
+    // If on other pages, we can simulate a logged-in user if not already set.
     if (pathname === '/') {
-        setUser(null);
-    } else {
-        if (!user) {
-            setUser(mockUser);
-        }
+        // If we are on the landing page, we should not have a user session.
+        // This can also be where you check for a real session token.
+        if (user) setUser(null); 
     }
     setLoading(false);
-  }, [pathname, setUser, user]);
+  }, [pathname, user, setUser]);
   
   useEffect(() => {
+      // This effect handles redirection based on auth state.
       if (loading) return;
 
       if (user && pathname === "/") {
+          // If the user is logged in and tries to access the landing page, redirect to dashboard.
           router.push("/dashboard");
       } else if (!user && pathname !== "/") {
+          // If the user is not logged in and tries to access any other page, redirect to landing.
           router.push("/");
       }
   }, [user, loading, pathname, router]);
 
   const isAuthPage = pathname === "/";
   
-  if (loading) {
-      return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
-  }
-  
   if (isAuthPage) {
+    // For the landing page, just render the children without any layout.
     return <>{children}</>;
   }
-
-  if (!user) {
-    return null; // Don't render anything while redirecting
+  
+  // For all other pages, show a loading state until redirection logic completes.
+  if (loading || !user) {
+      return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   }
 
+  // Once user is confirmed and we are not on the auth page, render the full app layout.
   return (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />

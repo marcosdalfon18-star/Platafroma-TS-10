@@ -85,6 +85,10 @@
   }
   html {
     scroll-behavior: smooth;
+    height: 100%;
+  }
+  body, #__next {
+    height: 100%;
   }
 }
 
@@ -100,5 +104,3 @@
         @apply -translate-y-1 shadow-2xl;
     }
 }
-
-    
