@@ -1,16 +1,26 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, MoreHorizontal } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import CreateJobPostForm from "@/components/forms/CreateJobPostForm";
+
+// Definimos el tipo para un puesto de trabajo
+export type JobPosition = {
+    id: number;
+    title: string;
+    department: string;
+    description?: string;
+    status: "Activo" | "Borrador" | "Archivado";
+};
 
 // Datos de ejemplo para los puestos
-const jobPositions = [
+const initialJobPositions: JobPosition[] = [
     { id: 1, title: "Gerente de Ventas", department: "Ventas", status: "Activo" },
     { id: 2, title: "Desarrollador Frontend", department: "Tecnología", status: "Activo" },
     { id: 3, title: "Analista de Marketing", department: "Marketing", status: "Borrador" },
@@ -19,6 +29,18 @@ const jobPositions = [
 ];
 
 export default function JobAnalysisPage() {
+  const [jobPositions, setJobPositions] = useState<JobPosition[]>(initialJobPositions);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const handleAddJobPosition = (newPositionData: Omit<JobPosition, 'id' | 'status'>) => {
+    const newPosition: JobPosition = {
+      ...newPositionData,
+      id: Date.now(), // Usamos un timestamp como ID simple
+      status: "Borrador", // Los nuevos puestos se crean como borrador
+    };
+    setJobPositions(prevPositions => [newPosition, ...prevPositions]);
+  };
+
   return (
     <div className="space-y-6">
         <header className="flex items-center justify-between">
@@ -26,7 +48,7 @@ export default function JobAnalysisPage() {
                 <h1 className="text-3xl font-bold">Análisis de Puestos</h1>
                 <p className="text-muted-foreground">Define, gestiona y analiza los roles de tu organización.</p>
             </div>
-            <Button>
+            <Button onClick={() => setIsCreateModalOpen(true)}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Crear Nuevo Puesto
             </Button>
@@ -83,6 +105,12 @@ export default function JobAnalysisPage() {
                 </Table>
             </CardContent>
         </Card>
+
+        <CreateJobPostForm
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSubmit={handleAddJobPosition}
+        />
     </div>
   );
 }
