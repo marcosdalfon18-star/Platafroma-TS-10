@@ -6,10 +6,14 @@ import ConsultorDashboard from "@/components/dashboards/ConsultorDashboard";
 import EmpresarioDashboard from "@/components/dashboards/EmpresarioDashboard";
 import EmpleadoDashboard from "@/components/dashboards/EmpleadoDashboard";
 import GestorDashboard from "@/components/dashboards/GestorDashboard";
-import { useCurrentRole } from "../layout";
 
+// Dado que hemos eliminado la autenticación, necesitamos decidir qué dashboard mostrar.
+// Por ahora, mostraremos el de Consultor por defecto.
+// Más adelante, podríamos usar un selector como el que teníamos en el Header.
 export default function DashboardPage() {
-  const { userRole } = useCurrentRole();
+  
+  // En el futuro, este valor vendría del estado de la aplicación o de un selector.
+  const userRole = "consultor";
 
   const renderDashboard = () => {
     switch (userRole) {
@@ -22,7 +26,6 @@ export default function DashboardPage() {
       case "gestor":
         return <GestorDashboard />;
       default:
-        // Por defecto, mostramos el dashboard de consultor si no hay un rol claro
         return <ConsultorDashboard />;
     }
   };

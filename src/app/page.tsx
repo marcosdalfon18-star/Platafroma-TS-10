@@ -14,6 +14,7 @@ function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    // Navegación directa al dashboard sin autenticación real
     router.push('/dashboard');
   };
 
@@ -60,7 +61,7 @@ function Signup() {
             <CardHeader>
                 <CardTitle className="text-2xl">Crear una cuenta</CardTitle>
                 <CardDescription>Funcionalidad de registro deshabilitada temporalmente.</CardDescription>
-            </CardHeader>
+            </Header>
             <CardContent>
                <div className="text-center text-muted-foreground p-8">
                 El registro de nuevos usuarios se activará en una futura versión.

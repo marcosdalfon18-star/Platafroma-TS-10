@@ -35,6 +35,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   };
 
   const hasAccess = (itemRoles: Role[]) => {
+    // En modo prototipo, permitimos el acceso basado en el rol simulado
     return itemRoles.includes(userRole);
   };
   
