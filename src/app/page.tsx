@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -61,7 +61,7 @@ function Signup() {
             <CardHeader>
                 <CardTitle className="text-2xl">Crear una cuenta</CardTitle>
                 <CardDescription>Funcionalidad de registro deshabilitada temporalmente.</CardDescription>
-            </Header>
+            </CardHeader>
             <CardContent>
                <div className="text-center text-muted-foreground p-8">
                 El registro de nuevos usuarios se activará en una futura versión.
