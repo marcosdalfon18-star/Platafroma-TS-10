@@ -40,15 +40,17 @@ function AppContent({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
             setUser(user);
-            // Fetch user role from Firestore
             const docRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 const userData = docSnap.data();
-                setUserRole(userData.role || "empleado"); // Default to 'empleado' if no role
+                setUserRole(userData.role || "empleado");
+            } else {
+                setUserRole("empleado");
             }
         } else {
             setUser(null);
+            setUserRole("empleado");
         }
         setLoading(false);
     });
@@ -59,28 +61,24 @@ function AppContent({ children }: { children: React.ReactNode }) {
   useEffect(() => {
       if (loading) return;
 
-      if (user && pathname === "/") {
+      const isAuthPage = pathname === "/";
+
+      if (user && isAuthPage) {
           router.push("/dashboard");
-      } else if (!user && pathname !== "/") {
+      } else if (!user && !isAuthPage) {
           router.push("/");
       }
   }, [user, loading, pathname, router]);
+  
+  const isAuthPage = pathname === "/";
 
-  const isLandingPage = pathname === "/";
-  
-  if (isLandingPage) {
-    return <>{children}</>;
-  }
-  
   if (loading) {
       return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   }
   
-  if (!user) {
-    // This state should be brief as the effect will redirect.
-    return <div className="flex items-center justify-center min-h-screen">Redireccionando...</div>;
+  if (isAuthPage || !user) {
+    return <>{children}</>;
   }
-
 
   return (
       <SidebarProvider>
@@ -105,7 +103,7 @@ export default function AppLayout({
   const [user, setUser] = useState<User | null>(null);
 
   return (
-    <html lang="en" suppressHydrationWarning className="h-full">
+    <html lang="es" suppressHydrationWarning className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
