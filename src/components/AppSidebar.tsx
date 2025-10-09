@@ -2,10 +2,8 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { signOut } from "firebase/auth";
-import { auth } from "@/firebase";
 import {
   Sidebar,
   SidebarHeader,
@@ -14,19 +12,13 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
   SidebarMenuSub,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 import { NAV_STRUCTURE, type NavLink, type NavGroup } from "@/lib/nav-links";
-import { Button } from "@/components/ui/button";
 import { LogOut, Settings, ChevronRight, Users } from "lucide-react";
-import { useCurrentRole } from "@/app/layout";
-import { cn } from "@/lib/utils";
 
 type Role = "consultor" | "empresario" | "empleado" | "gestor";
 
@@ -36,11 +28,10 @@ interface AppSidebarProps {
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   const pathname = usePathname();
-  const { setUser } = useCurrentRole();
+  const router = useRouter();
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    setUser(null);
+  const handleLogout = () => {
+    router.push('/');
   };
 
   const hasAccess = (itemRoles: Role[]) => {

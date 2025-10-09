@@ -1,9 +1,75 @@
 "use client";
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Login from '@/components/login';
-import Signup from '@/components/signup';
+
+
+function Login() {
+  const router = useRouter();
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push('/dashboard');
+  };
+
+  return (
+    <Card>
+        <CardHeader>
+            <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
+            <CardDescription>Introduce tus credenciales para acceder a la plataforma.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="email">Correo</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        placeholder="tu@correo.com"
+                        defaultValue="test@test.com"
+                        required
+                    />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="password">Contraseña</Label>
+                    <Input
+                        id="password"
+                        type="password"
+                        placeholder="********"
+                        defaultValue="password"
+                        required
+                    />
+                 </div>
+                <Button type="submit" className="w-full">
+                  Entrar
+                </Button>
+            </form>
+        </CardContent>
+    </Card>
+  );
+}
+
+function Signup() {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-2xl">Crear una cuenta</CardTitle>
+                <CardDescription>Funcionalidad de registro deshabilitada temporalmente.</CardDescription>
+            </CardHeader>
+            <CardContent>
+               <div className="text-center text-muted-foreground p-8">
+                El registro de nuevos usuarios se activará en una futura versión.
+               </div>
+            </CardContent>
+        </Card>
+    );
+}
+
 
 export default function LandingPage() {
     return (
