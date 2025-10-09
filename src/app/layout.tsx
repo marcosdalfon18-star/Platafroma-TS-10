@@ -7,14 +7,11 @@ import AppSidebar from "@/components/AppSidebar";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
 
-// Como eliminamos la autenticación, no necesitamos contexto de rol ni lógica compleja aquí.
-// La aplicación funcionará como un prototipo visual.
 export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Simulamos un rol para que la barra lateral sepa qué mostrar.
   const simulatedRole = "consultor";
 
   return (
@@ -27,12 +24,14 @@ export default function AppLayout({
       </head>
       <body className="h-full font-body antialiased bg-background">
           <SidebarProvider>
-            <AppSidebar userRole={simulatedRole} />
-            <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-              <Header />
-              <main className="p-4 sm:p-6 lg:p-8">
-                {children}
-              </main>
+            <div className="flex min-h-screen">
+              <AppSidebar userRole={simulatedRole} />
+              <div className="flex-1 md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+                <Header />
+                <main className="p-4 sm:p-6 lg:p-8">
+                  {children}
+                </main>
+              </div>
             </div>
           </SidebarProvider>
         <Toaster />
