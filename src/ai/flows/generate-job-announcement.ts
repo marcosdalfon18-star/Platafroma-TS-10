@@ -10,13 +10,13 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
-export const JobDetailsSchema = z.object({
+const JobDetailsSchema = z.object({
   title: z.string().describe('El título del puesto de trabajo.'),
   description: z.string().optional().describe('Una breve descripción de las responsabilidades y requisitos del puesto.'),
 });
 export type JobDetails = z.infer<typeof JobDetailsSchema>;
 
-export const JobAnnouncementSchema = z.object({
+const JobAnnouncementSchema = z.object({
   announcement: z.string().describe('El texto completo del anuncio de empleo generado.'),
 });
 export type JobAnnouncement = z.infer<typeof JobAnnouncementSchema>;

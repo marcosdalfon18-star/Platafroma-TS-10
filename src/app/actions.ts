@@ -11,7 +11,7 @@ import {
   SuggestAutomatedFixesOutput,
 } from '@/ai/flows/suggest-automated-fixes';
 import { employeeAssistantFlow } from '@/ai/flows/employee-assistant';
-import { generateJobAnnouncement, JobDetails } from '@/ai/flows/generate-job-announcement';
+import { generateJobAnnouncement, JobDetails, JobAnnouncement } from '@/ai/flows/generate-job-announcement';
 
 
 export async function getAiExplanation(
@@ -50,7 +50,7 @@ export async function getEmployeeAssistantResponse(prompt: string): Promise<stri
 
 export async function getJobAnnouncement(details: JobDetails): Promise<string> {
   try {
-    const result = await generateJobAnnouncement(details);
+    const result: JobAnnouncement = await generateJobAnnouncement(details);
     return result.announcement;
   } catch (error) {
     console.error('Error in getJobAnnouncement:', error);

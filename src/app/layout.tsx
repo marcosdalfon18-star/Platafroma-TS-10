@@ -30,8 +30,13 @@ export const useCurrentRole = () => {
     return context;
 };
 
-function AppContent({ children }: { children: React.ReactNode }) {
-  const { user, setUser, userRole, setUserRole } = useCurrentRole();
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [userRole, setUserRole] = useState<Role>("empleado");
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -56,7 +61,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [setUser, setUserRole]);
+  }, []);
   
   useEffect(() => {
       if (loading) return;
@@ -72,35 +77,28 @@ function AppContent({ children }: { children: React.ReactNode }) {
   
   const isAuthPage = pathname === "/";
 
-  if (isAuthPage) {
-    return <>{children}</>;
-  }
-  
-  if (loading || !user) {
+  const renderContent = () => {
+    if (isAuthPage) {
+      return children;
+    }
+
+    if(loading || !user) {
       return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
-  }
+    }
 
-  return (
+    return (
       <SidebarProvider>
-          <AppSidebar userRole={userRole} />
-          <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-              <Header userRole={userRole} setUserRole={setUserRole} />
-              <main className="p-4 sm:p-6 lg:p-8">
-                  {children}
-              </main>
-          </div>
+        <AppSidebar userRole={userRole} />
+        <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+          <Header userRole={userRole} setUserRole={setUserRole} />
+          <main className="p-4 sm:p-6 lg:p-8">
+            {children}
+          </main>
+        </div>
       </SidebarProvider>
-  );
-}
+    );
+  };
 
-
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [userRole, setUserRole] = useState<Role>("empleado");
-  const [user, setUser] = useState<User | null>(null);
 
   return (
     <html lang="es" suppressHydrationWarning className="h-full">
@@ -112,7 +110,7 @@ export default function AppLayout({
       </head>
       <body className="h-full font-body antialiased bg-background">
         <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
-            <AppContent>{children}</AppContent>
+          {renderContent()}
         </RoleContext.Provider>
         <Toaster />
       </body>

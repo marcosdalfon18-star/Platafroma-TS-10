@@ -12,13 +12,7 @@ import { z } from 'zod';
 const EmployeeAssistantInputSchema = z.string();
 const EmployeeAssistantOutputSchema = z.string();
 
-export const employeeAssistantFlow = ai.defineFlow(
-  {
-    name: 'employeeAssistantFlow',
-    inputSchema: EmployeeAssistantInputSchema,
-    outputSchema: EmployeeAssistantOutputSchema,
-  },
-  async (prompt) => {
+export async function employeeAssistantFlow(prompt: string): Promise<string> {
     const llmResponse = await ai.generate({
       prompt: `Eres SoSty, un asistente virtual de Recursos Humanos para la empresa "Talento Sostenible". Tu tono debe ser amigable, profesional y servicial.
       
@@ -36,5 +30,13 @@ export const employeeAssistantFlow = ai.defineFlow(
     });
 
     return llmResponse.text;
-  }
+}
+
+ai.defineFlow(
+  {
+    name: 'employeeAssistantFlow',
+    inputSchema: EmployeeAssistantInputSchema,
+    outputSchema: EmployeeAssistantOutputSchema,
+  },
+  employeeAssistantFlow
 );
