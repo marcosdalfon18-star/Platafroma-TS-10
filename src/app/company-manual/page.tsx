@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -9,36 +8,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Info } from "lucide-react";
 import { Card, CardContent } from '@/components/ui/card';
 
-const manualContent = [
-  {
-    id: "item-1",
-    title: "Bienvenida y Cultura de la Empresa",
-    content: "Nuestra misión es innovar y liderar el mercado con soluciones tecnológicas de vanguardia. Fomentamos un ambiente de colaboración, respeto y crecimiento continuo. Cada miembro de nuestro equipo es fundamental para nuestro éxito colectivo."
-  },
-  {
-    id: "item-2",
-    title: "Políticas de Teletrabajo y Horarios",
-    content: "Ofrecemos un modelo de trabajo híbrido que permite hasta 2 días de teletrabajo a la semana, previa coordinación con el manager directo. El horario de oficina estándar es de 9:00h a 18:00h, con una hora flexible de entrada y salida."
-  },
-  {
-    id: "item-3",
-    title: "Código de Conducta",
-    content: "Se espera que todos los empleados mantengan los más altos estándares de profesionalismo, integridad y ética. El acoso, la discriminación y cualquier comportamiento irrespetuoso no serán tolerados. Fomentamos un entorno seguro e inclusivo."
-  },
-  {
-    id: "item-4",
-    title: "Beneficios y Compensaciones",
-    content: "Además de un salario competitivo, ofrecemos un paquete de beneficios que incluye seguro médico privado, 22 días laborables de vacaciones al año, plan de formación continua y descuentos en gimnasios."
-  },
-   {
-    id: "item-5",
-    title: "Procedimiento de Bajas por Enfermedad",
-    content: "En caso de enfermedad, se debe notificar al manager directo por correo electrónico o teléfono antes de las 10:00h del primer día de ausencia. El justificante médico oficial debe presentarse en un plazo máximo de 3 días laborables desde el inicio de la baja."
-  }
-];
+const manualContent: { id: string; title: string; content: string }[] = [];
 
 export default function CompanyManualPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,7 +23,7 @@ export default function CompanyManualPage() {
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.content.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm]);
+  }, [searchTerm, manualContent]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -68,10 +41,21 @@ export default function CompanyManualPage() {
           className="pl-10" 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          disabled={manualContent.length === 0}
         />
       </div>
-
-      {filteredContent.length > 0 ? (
+      
+      {manualContent.length === 0 && !searchTerm ? (
+         <Card className="mt-8">
+            <CardContent className="p-6 text-center">
+                <Info className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                <h3 className="font-semibold">Manual en Construcción</h3>
+                <p className="text-muted-foreground mt-1">
+                    El contenido de esta sección será cargado por la consultora próximamente.
+                </p>
+            </CardContent>
+        </Card>
+      ) : filteredContent.length > 0 ? (
         <Accordion type="single" collapsible className="w-full">
           {filteredContent.map(item => (
             <AccordionItem key={item.id} value={item.id}>
