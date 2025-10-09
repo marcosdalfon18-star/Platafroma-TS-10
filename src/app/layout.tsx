@@ -72,12 +72,12 @@ function AppContent({ children }: { children: React.ReactNode }) {
   
   const isAuthPage = pathname === "/";
 
-  if (loading) {
-      return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
+  if (isAuthPage) {
+    return <>{children}</>;
   }
   
-  if (isAuthPage || !user) {
-    return <>{children}</>;
+  if (loading || !user) {
+      return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   }
 
   return (
