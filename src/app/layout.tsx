@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import "@/app/globals.css";
 import React, { useState, createContext, useContext, useEffect } from "react";
@@ -66,7 +66,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
   return (
       <SidebarProvider>
           <AppSidebar userRole={userRole} />
-          <div className="md:pl-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+          <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
               <Header userRole={userRole} setUserRole={setUserRole} />
               <main className="p-4 sm:p-6 lg:p-8">
                   {children}

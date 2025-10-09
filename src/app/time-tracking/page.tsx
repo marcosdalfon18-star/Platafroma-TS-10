@@ -1,22 +1,13 @@
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Clock } from "lucide-react";
+import PlaceholderPage from "@/components/PlaceholderPage";
 
 export default function TimeTrackingPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">Control Horario</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock />
-            <span>Control Horario</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">Página en construcción. Aquí se gestionará el control horario.</p>
-        </CardContent>
-      </Card>
-    </div>
+    <PlaceholderPage
+      title="Control Horario"
+      description="Aquí se gestionará el control horario."
+      icon={<Clock className="h-16 w-16 text-muted-foreground" />}
+    />
   );
 }
