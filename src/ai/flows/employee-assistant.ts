@@ -20,7 +20,7 @@ export const employeeAssistantFlow = ai.defineFlow(
   },
   async (prompt) => {
     const llmResponse = await ai.generate({
-      prompt: `Eres un asistente virtual de Recursos Humanos para la empresa "Talento Sostenible". Tu tono debe ser amigable, profesional y servicial.
+      prompt: `Eres SoSty, un asistente virtual de Recursos Humanos para la empresa "Talento Sostenible". Tu tono debe ser amigable, profesional y servicial.
       
       Tu base de conocimientos es la siguiente:
       - Días de vacaciones: 22 días laborables por año. Se deben solicitar con al menos 2 semanas de antelación.
@@ -30,7 +30,7 @@ export const employeeAssistantFlow = ai.defineFlow(
       
       Basado en esta información, responde a la siguiente pregunta del empleado de forma concisa y clara. Si no sabes la respuesta o la pregunta no está relacionada con RRHH, indica amablemente que no tienes esa información y que deben contactar directamente con el departamento de RRHH.
       
-      Pregunta del empleado: "${prompt}"
+      Pregunta: "${prompt}"
       `,
       model: 'googleai/gemini-2.5-flash',
     });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const handleSend = async () => {
     if (input.trim() === '') return;
@@ -44,16 +45,25 @@ export default function Chatbot() {
     }
   };
 
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({
+        top: scrollAreaRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages, isLoading]);
+
   return (
     <Card className="flex flex-col h-[500px]">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <Bot className="mr-2 h-5 w-5" />
-          Asistente Virtual de RRHH
+          <Bot className="mr-2 h-5 w-5 text-primary" />
+          SoSty - Asistente Virtual
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
-        <ScrollArea className="flex-grow p-4 border rounded-md mb-4 bg-muted/50">
+        <ScrollArea className="flex-grow p-4 border rounded-md mb-4 bg-muted/50" ref={scrollAreaRef}>
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div key={index} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
@@ -79,7 +89,7 @@ export default function Chatbot() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Pregunta sobre tus vacaciones, nómina..."
+            placeholder="Pregunta sobre vacaciones, nómina..."
             disabled={isLoading}
           />
           <Button onClick={handleSend} disabled={isLoading}>

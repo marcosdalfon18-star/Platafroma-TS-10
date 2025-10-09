@@ -8,6 +8,7 @@ import { Users, Briefcase, Plane, Building2, PlayCircle, UserMinus, UserCheck } 
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import Chatbot from "@/components/Chatbot";
 
 
 // Datos de ejemplo para el capital humano
@@ -178,7 +179,7 @@ export default function EmpresarioDashboard() {
         </div>
 
         {/* Columna Lateral */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-8">
           <Card>
             <CardHeader>
               <CardTitle>Distribución de Empleados</CardTitle>
@@ -213,6 +214,7 @@ export default function EmpresarioDashboard() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          <Chatbot />
         </div>
       </div>
     </div>
