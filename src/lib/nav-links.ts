@@ -50,7 +50,7 @@ export const NAV_STRUCTURE: (NavLink | NavGroup)[] = [
         href: "/company-manual",
         label: "Manual de Empresa",
         icon: Book,
-        roles: ["consultor", "empresario", "empleado"],
+        roles: ["consultor", "empresario"],
       },
       {
         href: "/job-analysis",
