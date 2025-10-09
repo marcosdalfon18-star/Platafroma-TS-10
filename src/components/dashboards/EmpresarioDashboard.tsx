@@ -1,6 +1,7 @@
 
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -38,6 +39,8 @@ const jobPositions = [
 
 
 export default function EmpresarioDashboard() {
+  const router = useRouter();
+
   return (
     <div className="space-y-8 p-4 sm:p-6 lg:p-8">
       <header>
@@ -118,7 +121,7 @@ export default function EmpresarioDashboard() {
                                   </CardHeader>
                                   <CardContent>
                                       <p className="text-sm text-muted-foreground">Visualiza y gestiona la estructura de tu empresa.</p>
-                                      <Button variant="outline" className="mt-4 w-full">Ver Organigrama</Button>
+                                      <Button variant="outline" className="mt-4 w-full" onClick={() => router.push('/org-chart')}>Ver Organigrama</Button>
                                   </CardContent>
                               </Card>
                               <Card className="hover:shadow-md transition-shadow">
@@ -131,7 +134,7 @@ export default function EmpresarioDashboard() {
                                   </CardHeader>
                                   <CardContent>
                                       <p className="text-sm text-muted-foreground">Define y analiza los perfiles de puesto clave.</p>
-                                      <Button variant="outline" className="mt-4 w-full">Gestionar Puestos</Button>
+                                      <Button variant="outline" className="mt-4 w-full" onClick={() => router.push('/job-analysis')}>Gestionar Puestos</Button>
                                   </CardContent>
                               </Card>
                           </div>
@@ -220,5 +223,3 @@ export default function EmpresarioDashboard() {
     </div>
   );
 }
-
-    
