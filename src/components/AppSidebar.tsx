@@ -4,6 +4,8 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 import {
   Sidebar,
   SidebarHeader,
@@ -22,7 +24,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 import { NAV_STRUCTURE, type NavLink, type NavGroup } from "@/lib/nav-links";
 import { Button } from "@/components/ui/button";
-import { LogOut, Settings, ChevronRight } from "lucide-react";
+import { LogOut, Settings, ChevronRight, Users } from "lucide-react";
 import { useCurrentRole } from "@/app/layout";
 import { cn } from "@/lib/utils";
 
@@ -36,8 +38,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ userRole }) => {
   const pathname = usePathname();
   const { setUser } = useCurrentRole();
 
-  const handleLogout = () => {
-    localStorage.removeItem('mockUserSession');
+  const handleLogout = async () => {
+    await signOut(auth);
     setUser(null);
   };
 

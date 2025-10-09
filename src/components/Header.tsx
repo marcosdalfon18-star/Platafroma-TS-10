@@ -2,7 +2,8 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Bell, Circle, LogOut } from "lucide-react";
@@ -25,9 +26,8 @@ const Header: React.FC<HeaderProps> = ({ userRole, setUserRole }) => {
         sendTestNotification
     } = usePushNotifications();
 
-    const handleLogout = () => {
-        // Clear mock session
-        localStorage.removeItem('mockUserSession');
+    const handleLogout = async () => {
+        await signOut(auth);
         setUser(null);
     };
 

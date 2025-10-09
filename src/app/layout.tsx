@@ -2,7 +2,9 @@
 
 import "@/app/globals.css";
 import React, { useState, createContext, useContext, useEffect } from "react";
-import { User } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import Header from "@/components/Header";
@@ -35,13 +37,24 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Simula la carga inicial de sesión
-    const mockSession = localStorage.getItem('mockUserSession');
-    if (mockSession) {
-      setUser(JSON.parse(mockSession));
-    }
-    setLoading(false);
-  }, [setUser]);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            setUser(user);
+            // Fetch user role from Firestore
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                setUserRole(userData.role || "empleado"); // Default to 'empleado' if no role
+            }
+        } else {
+            setUser(null);
+        }
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [setUser, setUserRole]);
   
   useEffect(() => {
       if (loading) return;
@@ -59,9 +72,15 @@ function AppContent({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
   
-  if (loading || !user) {
+  if (loading) {
       return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   }
+  
+  if (!user) {
+    // This state should be brief as the effect will redirect.
+    return <div className="flex items-center justify-center min-h-screen">Redireccionando...</div>;
+  }
+
 
   return (
       <SidebarProvider>
@@ -82,7 +101,7 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [userRole, setUserRole] = useState<Role>("consultor");
+  const [userRole, setUserRole] = useState<Role>("empleado");
   const [user, setUser] = useState<User | null>(null);
 
   return (
