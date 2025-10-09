@@ -1,3 +1,4 @@
+
 'use client';
 
 import "@/app/globals.css";
@@ -30,66 +31,20 @@ export const useCurrentRole = () => {
     return context;
 };
 
+// This component is a placeholder and will be restored later.
 const AppContent = ({ children }: { children: React.ReactNode }) => {
-  const { user, setUser, setUserRole } = useCurrentRole();
-  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
-  const router = useRouter();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            setUser(user);
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                setUserRole(userData.role || "empleado");
-            } else {
-                setUserRole("empleado");
-            }
-        } else {
-            setUser(null);
-            setUserRole("empleado");
-        }
-        setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [setUser, setUserRole]);
-  
-  useEffect(() => {
-      if (loading) return;
-
-      const isAuthPage = pathname === "/";
-
-      if (!user && !isAuthPage) {
-          router.push("/");
-      } else if (user && isAuthPage) {
-          router.push("/dashboard");
-      }
-  }, [user, loading, pathname, router]);
-  
   const isAuthPage = pathname === "/";
 
   if (isAuthPage) {
     return <>{children}</>;
   }
 
-  if (loading) {
-      return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
-  }
-
-  if (!user) {
-      // Este caso es manejado por el useEffect de arriba, pero es una buena práctica tenerlo
-      return <div className="flex items-center justify-center min-h-screen">Redirigiendo...</div>;
-  }
-  
   return (
       <SidebarProvider>
-        <AppSidebar userRole={useCurrentRole().userRole} />
+        <AppSidebar userRole={"consultor"} />
         <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-          <Header userRole={useCurrentRole().userRole} setUserRole={useCurrentRole().setUserRole} />
+          <Header userRole={"consultor"} setUserRole={() => {}} />
           <main className="p-4 sm:p-6 lg:p-8">
             {children}
           </main>
@@ -107,6 +62,29 @@ export default function AppLayout({
   const [userRole, setUserRole] = useState<Role>("empleado");
   const [user, setUser] = useState<User | null>(null);
 
+  // Basic auth listener to be refined later
+   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            setUser(user);
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                setUserRole(userData.role || "empleado");
+            }
+        } else {
+            setUser(null);
+        }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+
+  const pathname = usePathname();
+  const isAuthPage = pathname === "/";
+
   return (
     <html lang="es" suppressHydrationWarning className="h-full">
       <head>
@@ -117,10 +95,23 @@ export default function AppLayout({
       </head>
       <body className="h-full font-body antialiased bg-background">
         <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
-          <AppContent>{children}</AppContent>
+           {isAuthPage ? (
+              children
+            ) : (
+              <SidebarProvider>
+                <AppSidebar userRole={userRole} />
+                <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+                  <Header userRole={userRole} setUserRole={setUserRole} />
+                  <main className="p-4 sm:p-6 lg:p-8">
+                    {children}
+                  </main>
+                </div>
+              </SidebarProvider>
+            )}
         </RoleContext.Provider>
         <Toaster />
       </body>
     </html>
   );
 }
+
