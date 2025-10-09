@@ -1,4 +1,3 @@
-
 'use client';
 
 import "@/app/globals.css";
@@ -31,22 +30,18 @@ export const useCurrentRole = () => {
     return context;
 };
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [userRole, setUserRole] = useState<Role>("empleado");
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Estado de carga
+
+function AppContent({ children }: { children: React.ReactNode }) {
+  const { user, setUser, setUserRole } = useCurrentRole();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-        const docRef = doc(db, "users", user.uid);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const docRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             const userData = docSnap.data();
@@ -65,13 +60,45 @@ export default function AppLayout({
     });
 
     return () => unsubscribe();
-  }, [pathname, router]);
+  }, [pathname, router, setUser, setUserRole]);
 
   const isAuthPage = pathname === "/";
 
-   if (loading) {
+  if (loading) {
     return <div className="flex items-center justify-center h-full"><p>Cargando aplicación...</p></div>;
   }
+
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
+
+  // Si no es la página de autenticación y no hay usuario (aún cargando o deslogueado),
+  // se muestra un loader para evitar parpadeos antes de la redirección.
+  if (!user) {
+    return <div className="flex items-center justify-center h-full"><p>Cargando aplicación...</p></div>;
+  }
+  
+  return (
+    <SidebarProvider>
+      <AppSidebar userRole={useCurrentRole().userRole} />
+      <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+        <Header userRole={useCurrentRole().userRole} setUserRole={setUserRole} />
+        <main className="p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+      </div>
+    </SidebarProvider>
+  );
+}
+
+
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [userRole, setUserRole] = useState<Role>("empleado");
+  const [user, setUser] = useState<User | null>(null);
 
   return (
     <html lang="es" suppressHydrationWarning className="h-full">
@@ -83,19 +110,7 @@ export default function AppLayout({
       </head>
       <body className="h-full font-body antialiased bg-background">
         <RoleContext.Provider value={{ userRole, setUserRole, user, setUser }}>
-           {isAuthPage ? (
-              children
-            ) : (
-              <SidebarProvider>
-                <AppSidebar userRole={userRole} />
-                <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-                  <Header userRole={userRole} setUserRole={setUserRole} />
-                  <main className="p-4 sm:p-6 lg:p-8">
-                    {children}
-                  </main>
-                </div>
-              </SidebarProvider>
-            )}
+           <AppContent>{children}</AppContent>
         </RoleContext.Provider>
         <Toaster />
       </body>
