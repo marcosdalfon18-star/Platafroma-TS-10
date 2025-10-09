@@ -39,7 +39,7 @@ const attendanceData: { [key: string]: AttendanceRecord[] } = {
   ],
    "2024-07-30": [
     { employeeId: "E001", employeeName: "Ana García", entryTime: "09:05", exitTime: "18:10", status: "Tarde" },
-    { employee_id: "E002", employee_name: "Carlos Pérez", entry_time: null, exit_time: null, status: "Ausente" },
+    { employeeId: "E002", employeeName: "Carlos Pérez", entryTime: null, exitTime: null, status: "Ausente" },
     { employeeId: "E003", employeeName: "Lucía Martínez", entryTime: "08:50", exitTime: "17:55", status: "Puntual" },
     { employeeId: "E004", employeeName: "Roberto Fernández", entryTime: "08:55", exitTime: "18:00", status: "Puntual" },
   ],
