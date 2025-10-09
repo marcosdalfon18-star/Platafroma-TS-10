@@ -1,7 +1,7 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Card, CardContent } from '@/components/ui/card';
 
 const manualContent = [
   {
@@ -40,6 +41,17 @@ const manualContent = [
 ];
 
 export default function CompanyManualPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredContent = useMemo(() => {
+    if (!searchTerm) return manualContent;
+
+    return manualContent.filter(item =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.content.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <header>
@@ -51,21 +63,34 @@ export default function CompanyManualPage() {
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-        <Input placeholder="Buscar en el manual..." className="pl-10" />
+        <Input 
+          placeholder="Buscar en el manual..." 
+          className="pl-10" 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
-      <Accordion type="single" collapsible className="w-full">
-        {manualContent.map(item => (
-          <AccordionItem key={item.id} value={item.id}>
-            <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-              {item.title}
-            </AccordionTrigger>
-            <AccordionContent className="text-base text-muted-foreground leading-relaxed">
-              {item.content}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      {filteredContent.length > 0 ? (
+        <Accordion type="single" collapsible className="w-full">
+          {filteredContent.map(item => (
+            <AccordionItem key={item.id} value={item.id}>
+              <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                {item.title}
+              </AccordionTrigger>
+              <AccordionContent className="text-base text-muted-foreground leading-relaxed">
+                {item.content}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      ) : (
+        <Card className="mt-8">
+            <CardContent className="p-6 text-center">
+                <p className="text-muted-foreground">No se encontraron resultados para "<strong>{searchTerm}</strong>".</p>
+            </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
