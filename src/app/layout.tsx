@@ -39,56 +39,59 @@ function AppContent({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
       if (currentUser) {
-        setUser(currentUser);
         const docRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             const userData = docSnap.data();
             setUserRole(userData.role || "empleado");
         }
-        if (pathname === "/") {
-          router.push("/dashboard");
-        }
-      } else {
-        setUser(null);
-        if (pathname !== "/") {
-          router.push("/");
-        }
       }
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [pathname, router, setUser, setUserRole]);
+  }, [setUser, setUserRole]);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const isAuthPage = pathname === "/";
+
+    if (user && isAuthPage) {
+      router.push("/dashboard");
+    } else if (!user && !isAuthPage) {
+      router.push("/");
+    }
+  }, [user, loading, pathname, router]);
 
   const isAuthPage = pathname === "/";
 
   if (loading) {
-    return <div className="flex items-center justify-center h-full"><p>Cargando aplicación...</p></div>;
+    return <div className="flex items-center justify-center h-full w-full"><p>Cargando aplicación...</p></div>;
   }
 
   if (isAuthPage) {
     return <>{children}</>;
   }
-
-  // Si no es la página de autenticación y no hay usuario (aún cargando o deslogueado),
-  // se muestra un loader para evitar parpadeos antes de la redirección.
-  if (!user) {
-    return <div className="flex items-center justify-center h-full"><p>Cargando aplicación...</p></div>;
-  }
   
-  return (
-    <SidebarProvider>
-      <AppSidebar userRole={useCurrentRole().userRole} />
-      <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
-        <Header userRole={useCurrentRole().userRole} setUserRole={setUserRole} />
-        <main className="p-4 sm:p-6 lg:p-8">
-          {children}
-        </main>
-      </div>
-    </SidebarProvider>
-  );
+  if (!isAuthPage && user) {
+    return (
+      <SidebarProvider>
+        <AppSidebar userRole={useCurrentRole().userRole} />
+        <div className="md:pl-64 group-data-[collapsible=icon]:md:pl-[var(--sidebar-width-icon)] transition-all duration-200 ease-in-out">
+          <Header userRole={useCurrentRole().userRole} setUserRole={setUserRole} />
+          <main className="p-4 sm:p-6 lg:p-8">
+            {children}
+          </main>
+        </div>
+      </SidebarProvider>
+    );
+  }
+
+  // Si no hay usuario y no es la página de autenticación, se muestra un loader mientras la redirección hace efecto.
+  return <div className="flex items-center justify-center h-full w-full"><p>Cargando aplicación...</p></div>;
 }
 
 
