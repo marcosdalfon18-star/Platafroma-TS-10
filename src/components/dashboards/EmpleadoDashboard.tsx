@@ -1,14 +1,16 @@
+
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, Calendar as CalendarIcon } from "lucide-react";
+import { Upload, FileText, Calendar as CalendarIcon, Megaphone, Wallet, BarChart2, ClipboardList } from "lucide-react";
 import UploadDocumentModal from "@/components/modals/UploadDocumentModal";
 import Chatbot from "@/components/Chatbot";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 // --- Tipos y Datos de Ejemplo ---
 
@@ -31,7 +33,6 @@ const employeeAttendanceData: AttendanceRecord[] = [
   { date: "2024-07-28", entryTime: "08:55", exitTime: "18:05", status: "Puntual" },
   { date: "2024-07-29", entryTime: "08:58", exitTime: "18:00", status: "Puntual" },
   { date: "2024-07-30", entryTime: "09:05", exitTime: "18:10", status: "Tarde" },
-  // ... más registros
 ];
 
 const attendanceByDate = employeeAttendanceData.reduce((acc, record) => {
@@ -79,21 +80,18 @@ export default function EmpleadoDashboard() {
       <div className="max-w-7xl mx-auto space-y-6">
           <header>
             <h1 className="text-3xl font-bold">Portal del Empleado 🧑‍💻</h1>
-            <p className="text-muted-foreground">Bienvenido, aquí puedes gestionar tu información y documentos.</p>
+            <p className="text-muted-foreground">Bienvenido, aquí puedes gestionar tu información y desarrollo profesional.</p>
           </header>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
+            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-1">
                     <CardHeader>
                         <CardTitle className="flex items-center">
                             <CalendarIcon className="mr-2 h-5 w-5" />
                             Mi Asistencia
                         </CardTitle>
-                         <CardDescription>
-                            Selecciona un día para ver tus registros.
-                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                        <div className="flex justify-center">
@@ -110,7 +108,6 @@ export default function EmpleadoDashboard() {
                             }}
                          />
                        </div>
-                       
                        {selectedDayRecord ? (
                             <div className="space-y-2 p-3 bg-muted/50 rounded-lg">
                                 <h4 className="font-semibold text-center mb-2">Registro del {format(selectedDate!, "PPP", { locale: es })}</h4>
@@ -129,40 +126,54 @@ export default function EmpleadoDashboard() {
                                     </Badge>
                                 </div>
                             </div>
-                        ) : (
-                             <p className="text-center text-sm text-muted-foreground py-4">No hay registro para este día.</p>
-                        )}
+                        ) : ( <p className="text-center text-sm text-muted-foreground py-4">No hay registro para este día.</p> )}
                     </CardContent>
                 </Card>
                 
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <FileText className="mr-2 h-5 w-5" />
-                                Mis Documentos
-                            </div>
-                            <Button size="sm" onClick={() => setIsModalOpen(true)}>
-                                <Upload className="mr-2 h-4 w-4" />
-                                Subir
-                            </Button>
+                            <div className="flex items-center"><FileText className="mr-2 h-5 w-5" /> Mis Documentos</div>
+                            <Button size="sm" onClick={() => setIsModalOpen(true)}><Upload className="mr-2 h-4 w-4" /> Subir</Button>
                         </CardTitle>
-                         <CardDescription>
-                            Tus archivos personales y de empresa.
-                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        {documents.length > 0 ? (
-                            <ul className="space-y-2">
-                                {documents.map(doc => (
-                                    <li key={doc.id} className="flex items-center p-2 bg-muted rounded-md text-sm">
-                                        {doc.name}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-center text-sm text-muted-foreground py-4">No tienes documentos subidos.</p>
-                        )}
+                    <CardContent>{documents.length > 0 ? (<ul className="space-y-2">{documents.map(doc => (<li key={doc.id} className="flex items-center p-2 bg-muted rounded-md text-sm">{doc.name}</li>))}</ul>) : (<p className="text-center text-sm text-muted-foreground py-4">No tienes documentos.</p>)}</CardContent>
+                </Card>
+                
+                <Card>
+                    <CardHeader><CardTitle className="flex items-center"><Megaphone className="mr-2 h-5 w-5" /> Comunicaciones</CardTitle></CardHeader>
+                    <CardContent className="space-y-2 text-sm">
+                        <div className="p-2 bg-muted rounded-md">Nueva política de teletrabajo. <span className="text-xs text-muted-foreground">- 28/07</span></div>
+                        <div className="p-2 bg-muted rounded-md">Próximo evento de equipo. <span className="text-xs text-muted-foreground">- 25/07</span></div>
+                        <Button variant="link" className="p-0 h-auto">Ver todas</Button>
+                    </CardContent>
+                </Card>
+                
+                 <Card>
+                    <CardHeader><CardTitle className="flex items-center"><Wallet className="mr-2 h-5 w-5" /> Mis Nóminas</CardTitle></CardHeader>
+                    <CardContent className="space-y-3">
+                        <div className="flex justify-between items-center p-2 bg-muted rounded-md text-sm"><span>Nómina Julio 2024</span><Button variant="secondary" size="sm">Descargar</Button></div>
+                        <Button variant="link" className="p-0 h-auto">Ver historial</Button>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader><CardTitle className="flex items-center"><BarChart2 className="mr-2 h-5 w-5" /> Evaluaciones</CardTitle></CardHeader>
+                    <CardContent className="space-y-3 text-sm">
+                        <p>Última evaluación (Q2 2024): <Badge>Cumple expectativas</Badge></p>
+                        <Button variant="outline" className="w-full">Ver detalles</Button>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader><CardTitle className="flex items-center"><ClipboardList className="mr-2 h-5 w-5" /> Mis Capacitaciones</CardTitle></CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="text-sm">
+                            <p>Curso de Liderazgo Avanzado</p>
+                            <Progress value={75} className="mt-1 h-2" />
+                            <p className="text-xs text-muted-foreground text-right">75% completado</p>
+                        </div>
+                        <Button variant="outline" className="w-full">Ir a formación</Button>
                     </CardContent>
                 </Card>
             </div>
@@ -182,3 +193,5 @@ export default function EmpleadoDashboard() {
     </div>
   );
 }
+
+    
