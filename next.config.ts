@@ -11,10 +11,9 @@ const nextConfig: NextConfig = {
   // Optimizaciones de rendimiento
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
   // Configuración de bundler para desarrollo más rápido
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config, { dev }) => {
     if (dev) {
       // Optimizaciones para desarrollo
       config.optimization = {

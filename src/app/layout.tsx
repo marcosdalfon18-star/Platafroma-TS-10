@@ -1,13 +1,20 @@
-'use client';
-
 import "@/app/globals.css";
 import React from 'react';
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSidebar";
-import Header from "@/components/Header";
-import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayoutContent } from "@/components/AppLayoutContent";
+import { Toaster } from "@/components/ui/toaster";
+import { Metadata } from "next";
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+export const metadata: Metadata = {
+  title: "Plataforma TS 10 - Gestión de Talento",
+  description: "Sistema completo de gestión de talento humano con IA",
+};
 
 export default function AppLayout({
   children,
@@ -15,14 +22,8 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning className="h-full">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
-      </head>
-      <body className="h-full font-body antialiased bg-background">
+    <html lang="es" suppressHydrationWarning className={`h-full ${inter.variable}`}>
+      <body className="h-full font-sans antialiased bg-background">
         <AuthProvider>
           <AppLayoutContent>
             {children}
