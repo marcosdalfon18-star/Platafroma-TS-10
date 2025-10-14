@@ -8,6 +8,36 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Optimizaciones de rendimiento
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+  // Configuración de bundler para desarrollo más rápido
+  webpack: (config, { dev, isServer }) => {
+    if (dev) {
+      // Optimizaciones para desarrollo
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+            lucide: {
+              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+              name: 'lucide',
+              chunks: 'all',
+            }
+          },
+        },
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {

@@ -4,7 +4,12 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+
+// Componente ResponsiveContainer temporal
+const ResponsiveContainer = ({ width, height, children }: { width: string; height: number; children: React.ReactNode }) => (
+  <div style={{ width, height }}>{children}</div>
+);
 import { Users, Briefcase, Plane, Building2, PlayCircle, UserMinus, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -189,7 +194,7 @@ export default function EmpresarioDashboard() {
               <CardDescription>Estado actual de la plantilla.</CardDescription>
             </CardHeader>
             <CardContent className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
                     data={chartData}

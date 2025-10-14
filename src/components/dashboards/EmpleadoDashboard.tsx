@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, Calendar as CalendarIcon, Megaphone, Wallet, BarChart2, ClipboardList } from "lucide-react";
 import UploadDocumentModal from "@/components/modals/UploadDocumentModal";
@@ -10,7 +10,17 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress"; // Temporalmente comentado
+
+// Componente Progress temporal
+const Progress = ({ value, className }: { value: number; className?: string }) => (
+  <div className={`w-full bg-gray-200 rounded-full h-2.5 ${className}`}>
+    <div 
+      className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+      style={{ width: `${value}%` }}
+    ></div>
+  </div>
+);
 
 // --- Tipos y Datos de Ejemplo ---
 

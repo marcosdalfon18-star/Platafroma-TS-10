@@ -34,10 +34,15 @@ const GenerateAdModal: React.FC<GenerateAdModalProps> = ({ isOpen, onClose, posi
         try {
           const result = await getJobAnnouncement({
             title: position.title,
-            description: position.description,
+            description: position.description || 'Posición disponible en nuestra empresa',
+            requirements: [],
+            department: 'General',
+            location: 'No especificado',
+            experienceLevel: 'Medio',
+            employmentType: 'Tiempo completo'
           });
           setAnnouncement(result);
-        } catch (err) {
+        } catch {
           setError('No se pudo generar el anuncio. Por favor, inténtalo de nuevo.');
         } finally {
           setIsLoading(false);
@@ -63,7 +68,7 @@ const GenerateAdModal: React.FC<GenerateAdModalProps> = ({ isOpen, onClose, posi
         <DialogHeader>
           <DialogTitle>Anuncio Generado por IA</DialogTitle>
           <DialogDescription>
-            Este es un borrador generado para el puesto de "{position?.title}". Puedes copiarlo y ajustarlo.
+            Este es un borrador generado para el puesto de &quot;{position?.title}&quot;. Puedes copiarlo y ajustarlo.
           </DialogDescription>
         </DialogHeader>
         <div className="my-4 max-h-[60vh] overflow-y-auto p-4 border rounded-md bg-muted/50 relative">

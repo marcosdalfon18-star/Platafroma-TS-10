@@ -1,0 +1,49 @@
+[33mcommit fdb2a96bb1efe4c175e246835984293abac92250[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Marcos Alfonso <marcosdalfon18@gmail.com>
+Date:   Thu Oct 9 08:36:33 2025 +0000
+
+    Commit Inicial
+
+M	src/app/page.tsx
+
+[33mcommit 0a42511055ec8fb313fcdce25665c5ac52c2cec2[m
+Author: Marcos Alfonso <marcosdalfon18@gmail.com>
+Date:   Thu Oct 9 07:53:09 2025 +0000
+
+    revida y corrige el componente card
+
+M	src/components/ui/card.tsx
+
+[33mcommit 64d90efb7a67a3cd495cafa9cbfc498eb2dd156f[m
+Author: Marcos Alfonso <marcosdalfon18@gmail.com>
+Date:   Thu Oct 9 07:37:29 2025 +0000
+
+    pero que pasaaaa por favor que pasa que no solucioona elimina lo que gen
+
+M	src/app/signup/page.tsx
+D	src/components/Dashboard.tsx
+D	src/components/login.tsx
+D	src/components/signup.tsx
+M	src/firebase.ts
+M	src/lib/nav-links.ts
+
+[33mcommit 5c2b6a11d40b59612cd789f72654b61efaf456f4[m
+Author: Marcos Alfonso <marcosdalfon18@gmail.com>
+Date:   Thu Oct 9 07:34:36 2025 +0000
+
+    como puede  ser madre mia
+
+M	src/app/layout.tsx
+M	src/components/login.tsx
+
+[33mcommit fc6944dc890aae040f1e67c94ffbf4a5c641df86[m
+Author: Marcos Alfonso <marcosdalfon18@gmail.com>
+Date:   Thu Oct 9 07:26:32 2025 +0000
+
+    corregir el panel isquierdo  esta fuera de foco
+
+M	src/app/dashboard/page.tsx
+M	src/app/layout.tsx
+M	src/app/page.tsx
+M	src/components/AppSidebar.tsx
+M	src/components/Header.tsx

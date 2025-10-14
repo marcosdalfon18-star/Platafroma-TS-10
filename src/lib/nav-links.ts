@@ -1,32 +1,36 @@
 import {
   Users,
-  Book,
-  ClipboardList,
-  Search,
   MessageSquare,
-  BarChart2,
   Cpu,
   Target,
   Megaphone,
   LayoutDashboard,
-  Settings,
   FileText,
-  Wallet,
   Clock,
   ShieldCheck,
+  DollarSign,
+  BookOpen,
+  Briefcase,
+  UserCheck,
+  GraduationCap,
+  TrendingUp,
+  Building2
 } from "lucide-react";
+
+import { UserRole } from "@/contexts/AuthContext";
 
 export type NavLink = {
   href: string;
   label: string;
-  icon: React.ComponentType<any>;
-  roles: Array<"consultor" | "empresario" | "empleado" | "gestor">;
+  icon: React.ComponentType<{ className?: string }>;
+  roles: Array<UserRole>;
 };
 
 export type NavGroup = {
   label: string;
+  icon?: React.ComponentType<{ className?: string }>;
   links: NavLink[];
-  roles: Array<"consultor" | "empresario" | "empleado" | "gestor">;
+  roles: Array<UserRole>;
 };
 
 export const NAV_STRUCTURE: (NavLink | NavGroup)[] = [
@@ -34,120 +38,117 @@ export const NAV_STRUCTURE: (NavLink | NavGroup)[] = [
     href: "/dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
-    roles: ["consultor", "empresario", "empleado", "gestor"],
+    roles: ["consultor", "empresario", "empleado", "gestor", "ejecutivo"],
   },
   {
-    label: "Gestión del Talento",
-    roles: ["consultor", "empresario"],
+    label: "Gestión de Talento",
+    icon: Users,
+    roles: ["consultor", "empresario", "gestor"],
     links: [
-      {
-        href: "/org-chart",
-        label: "Organigrama",
-        icon: Users,
-        roles: ["consultor", "empresario"],
-      },
       {
         href: "/company-manual",
         label: "Manual de Empresa",
-        icon: Book,
-        roles: ["consultor", "empresario"],
+        icon: BookOpen,
+        roles: ["consultor", "empresario", "gestor", "empleado"],
+      },
+      {
+        href: "/org-chart",
+        label: "Organigrama",
+        icon: Building2,
+        roles: ["consultor", "empresario", "gestor"],
       },
       {
         href: "/job-analysis",
         label: "Análisis de Puestos",
-        icon: ClipboardList,
-        roles: ["consultor", "empresario"],
+        icon: Briefcase,
+        roles: ["consultor", "empresario", "gestor"],
       },
       {
         href: "/selection-processes",
         label: "Procesos de Selección",
-        icon: Search,
-        roles: ["consultor", "empresario"],
+        icon: UserCheck,
+        roles: ["consultor", "empresario", "gestor"],
       },
-       {
+      {
         href: "/interviews",
         label: "Entrevistas",
         icon: MessageSquare,
-        roles: ["consultor", "empresario"],
+        roles: ["consultor", "empresario", "gestor"],
       },
-       {
-        href: "/training",
-        label: "Capacitaciones",
-        icon: ClipboardList,
-        roles: ["consultor", "empresario", "empleado"],
-      },
-       {
+      {
         href: "/performance-evaluation",
-        label: "Evaluaciones",
-        icon: BarChart2,
-        roles: ["consultor", "empresario", "empleado"],
+        label: "Evaluación de Desempeño",
+        icon: TrendingUp,
+        roles: ["consultor", "empresario", "gestor", "empleado"],
+      },
+      {
+        href: "/training",
+        label: "Capacitación",
+        icon: GraduationCap,
+        roles: ["consultor", "empresario", "gestor", "empleado"],
+      },
+      {
+        href: "/time-tracking",
+        label: "Control de Horario",
+        icon: Clock,
+        roles: ["consultor", "empresario", "gestor", "empleado"],
+      },
+      {
+        href: "/payroll",
+        label: "Gestión de Nóminas",
+        icon: DollarSign,
+        roles: ["consultor", "empresario", "gestor"],
+      },
+      {
+        href: "/security-settings",
+        label: "Configuración de Seguridad",
+        icon: ShieldCheck,
+        roles: ["consultor", "empresario", "gestor", "empleado"],
       },
     ],
   },
-   {
-    label: "Marketing",
-    roles: ["consultor", "empresario"],
+  {
+    label: "Marketing Estratégico",
+    icon: Target,
+    roles: ["consultor", "empresario", "ejecutivo"],
     links: [
-        {
-            href: "/marketing",
-            label: "Marketing Estratégico",
-            icon: Target,
-            roles: ["consultor", "empresario"],
-        },
-    ]
+      {
+        href: "/marketing",
+        label: "Marketing Estratégico",
+        icon: Target,
+        roles: ["consultor", "empresario", "ejecutivo"],
+      },
+    ],
   },
   {
     label: "Agentes IA",
-    roles: ["consultor", "empresario"],
-     links: [
-        {
-            href: "/ai-agents",
-            label: "Agentes IA",
-            icon: Cpu,
-            roles: ["consultor", "empresario"],
-        },
-    ]
-  },
-  {
-    label: "Comunicaciones",
-    roles: ["consultor", "empresario", "gestor"],
+    icon: Cpu,
+    roles: ["consultor", "empresario", "ejecutivo"],
     links: [
-        {
-            href: "/communications",
-            label: "Comunicaciones",
-            icon: Megaphone,
-            roles: ["consultor", "empresario", "gestor"],
-        },
-    ]
-  },
-  {
-    href: "/payroll",
-    label: "Gestión de Nóminas",
-    icon: Wallet,
-    roles: ["consultor", "empresario", "gestor"],
-  },
-  {
-    href: "/time-tracking",
-    label: "Control Horario",
-    icon: Clock,
-    roles: ["consultor", "empresario", "empleado"],
+      {
+        href: "/ai-agents",
+        label: "Agentes IA",
+        icon: Cpu,
+        roles: ["consultor", "empresario", "ejecutivo"],
+      },
+    ],
   },
   {
     href: "/cybersecurity",
     label: "Ciberseguridad",
     icon: ShieldCheck,
-    roles: ["consultor", "empresario"],
+    roles: ["consultor", "empresario", "ejecutivo"],
+  },
+  {
+    href: "/communications",
+    label: "Comunicaciones",
+    icon: Megaphone,
+    roles: ["consultor", "empresario", "gestor", "empleado"],
   },
   {
     href: "/reports",
     label: "Centro de Informes",
     icon: FileText,
-    roles: ["consultor", "empresario"],
-  },
-  {
-    href: "/plan-management",
-    label: "Gestión de Planes",
-    icon: Settings,
-    roles: ["consultor"],
+    roles: ["consultor", "empresario", "gestor"],
   },
 ];
