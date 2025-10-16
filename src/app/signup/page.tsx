@@ -17,7 +17,7 @@ export default function SignupPage() {
                     </div>
                     <p className="text-sm text-center text-gray-600">
                         ¿Ya tienes una cuenta?{' '}
-                        <Link href="/" className="font-medium text-primary hover:underline">
+                        <Link href="/login" className="font-medium text-primary hover:underline">
                             Inicia sesión
                         </Link>
                     </p>

@@ -17,7 +17,7 @@ export const AppLayoutContent: React.FC<AppLayoutContentProps> = ({ children }) 
   const pathname = usePathname();
   
   // Rutas públicas que no requieren autenticación
-  const publicRoutes = ['/', '/signup'];
+  const publicRoutes = ['/', '/signup', '/login'];
   const isPublicRoute = publicRoutes.includes(pathname);
   
   // Mostrar spinner durante la carga inicial
