@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[5695],{35695:(e,u,t)=>{var n=t(18999);t.o(n,"usePathname")&&t.d(u,{usePathname:function(){return n.usePathname}}),t.o(n,"useRouter")&&t.d(u,{useRouter:function(){return n.useRouter}})}}]);
